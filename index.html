@@ -1,0 +1,3705 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta name="theme-color" content="#000000">
+
+    <title>3D Space Sphere</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            overscroll-behavior: none;
+        }
+
+        #app {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* =====================================================
+       VIEWER
+       ===================================================== */
+
+        #viewer {
+            position: absolute;
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            background: #000;
+
+            cursor: grab;
+
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+
+            overscroll-behavior: none;
+        }
+
+        #viewer.dragging {
+            cursor: none;
+        }
+
+        #viewer canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* =====================================================
+       VIEW STATUS
+       ===================================================== */
+
+        #viewStatus {
+            position: absolute;
+
+            top: 15px;
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            z-index: 80;
+
+            padding: 8px 14px;
+
+            border-radius: 999px;
+
+            color: rgba(255, 255, 255, 0.9);
+
+            background: rgba(0, 0, 0, 0.36);
+
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+
+            font-size: 12px;
+            font-weight: 700;
+
+            letter-spacing: 0.5px;
+
+            pointer-events: none;
+            user-select: none;
+
+            text-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.9);
+        }
+
+        /* =====================================================
+       SENSOR STATUS
+       ===================================================== */
+
+        #sensorStatus {
+            position: absolute;
+
+            top: 52px;
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            z-index: 80;
+
+            padding: 7px 12px;
+
+            border-radius: 999px;
+
+            color: rgba(255, 255, 255, 0.82);
+
+            background: rgba(0, 0, 0, 0.3);
+
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+
+            font-size: 11px;
+
+            pointer-events: none;
+            user-select: none;
+
+            display: none;
+        }
+
+        /* =====================================================
+       LOADING
+       ===================================================== */
+
+        #loading {
+            position: absolute;
+            inset: 0;
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 25px;
+
+            color: #fff;
+
+            font-size: 15px;
+            text-align: center;
+
+            background: rgba(0, 0, 0, 0.72);
+
+            z-index: 200;
+
+            pointer-events: none;
+
+            opacity: 1;
+
+            transition:
+                opacity 0.25s ease;
+        }
+
+        #loading.hidden {
+            opacity: 0;
+        }
+
+        /* =====================================================
+       ERROR
+       ===================================================== */
+
+        #error {
+            position: absolute;
+
+            left: 50%;
+            top: 50%;
+
+            transform: translate(-50%, -50%);
+
+            width: min(90%, 650px);
+
+            padding: 22px;
+
+            border-radius: 14px;
+
+            color: #fff;
+
+            background: rgba(25, 0, 0, 0.95);
+
+            text-align: center;
+
+            line-height: 1.5;
+
+            display: none;
+
+            z-index: 300;
+        }
+
+        #error code {
+            font-family: Consolas, monospace;
+            color: #fff;
+        }
+
+        /* =====================================================
+       BOTTOM UI
+       ===================================================== */
+
+        .ui {
+            position: absolute;
+
+            left: 50%;
+            bottom: 18px;
+
+            transform: translateX(-50%);
+
+            width: min(94vw, 620px);
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            gap: 8px;
+
+            z-index: 100;
+
+            pointer-events: none;
+        }
+
+        .title {
+            color: rgba(255, 255, 255, 0.88);
+
+            font-size: 13px;
+            line-height: 1.35;
+
+            text-align: center;
+
+            text-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.95);
+
+            user-select: none;
+        }
+
+        .control-row {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            width: 100%;
+
+            pointer-events: auto;
+        }
+
+        button {
+            border: 0;
+            outline: none;
+
+            cursor: pointer;
+
+            min-height: 44px;
+
+            padding: 11px 16px;
+
+            border-radius: 12px;
+
+            background: rgba(255, 255, 255, 0.95);
+
+            color: #111;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            box-shadow:
+                0 8px 30px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.85);
+
+            transition:
+                transform 0.15s ease,
+                background 0.15s ease,
+                opacity 0.15s ease;
+
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            background: #fff;
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.62;
+            cursor: wait;
+            transform: none;
+        }
+
+        /* =====================================================
+       DISTANCE
+       ===================================================== */
+
+        .distance-box {
+            width: min(100%, 490px);
+
+            padding: 10px 15px;
+
+            border-radius: 14px;
+
+            background: rgba(0, 0, 0, 0.4);
+
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+
+            box-shadow:
+                0 8px 25px rgba(0, 0, 0, 0.25);
+
+            pointer-events: auto;
+        }
+
+        .distance-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 6px;
+        }
+
+        .distance-label {
+            color: #fff;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .distance-value {
+            color: rgba(255, 255, 255, 0.75);
+
+            font-size: 11px;
+        }
+
+        #distanceSlider {
+            display: block;
+
+            width: 100%;
+
+            margin: 0;
+
+            cursor: pointer;
+
+            accent-color: white;
+        }
+
+        /* =====================================================
+       HIDDEN INPUTS
+       ===================================================== */
+
+        #imageInput,
+        #videoInput {
+            display: none;
+        }
+
+        /* =====================================================
+       MOBILE
+       ===================================================== */
+
+        @media (max-width: 600px) {
+
+            .ui {
+                width: calc(100vw - 14px);
+                bottom: 9px;
+                gap: 6px;
+            }
+
+            .title {
+                font-size: 11px;
+            }
+
+            .control-row {
+                gap: 6px;
+            }
+
+            button {
+                flex: 1 1 auto;
+
+                min-height: 42px;
+
+                padding: 9px 10px;
+
+                font-size: 11px;
+            }
+
+            .distance-box {
+                padding: 8px 11px;
+            }
+
+            #viewStatus {
+                top: 9px;
+                font-size: 10px;
+            }
+
+            #sensorStatus {
+                top: 40px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app">
+
+        <!-- ===================================================
+       3D VIEWER
+       =================================================== -->
+
+        <div id="viewer"></div>
+
+
+        <!-- ===================================================
+       STATUS
+       =================================================== -->
+
+        <div id="viewStatus">
+            INSIDE VIEW
+        </div>
+
+
+        <div id="sensorStatus">
+            MOTION SENSOR ACTIVE
+        </div>
+
+
+        <!-- ===================================================
+       LOADING
+       =================================================== -->
+
+        <div id="loading">
+            Loading...
+        </div>
+
+
+        <!-- ===================================================
+       ERROR
+       =================================================== -->
+
+        <div id="error"></div>
+
+
+        <!-- ===================================================
+       UI
+       =================================================== -->
+
+        <div class="ui">
+
+            <div class="title">
+                Hold Left Mouse Button + Move • Touch & Drag
+            </div>
+
+
+            <!-- =================================================
+         DISTANCE
+         ================================================= -->
+
+            <div class="distance-box">
+
+                <div class="distance-header">
+
+                    <div class="distance-label">
+                        Space Distance
+                    </div>
+
+                    <div id="distanceValue" class="distance-value">
+                        50
+                    </div>
+
+                </div>
+
+                <input id="distanceSlider" type="range" min="20" max="1000" value="50" step="1">
+
+            </div>
+
+
+            <!-- =================================================
+         VIEW CONTROLS
+         ================================================= -->
+
+            <div class="control-row">
+
+                <button id="viewToggleBtn">
+                    Switch to Outside
+                </button>
+
+                <button id="sensorBtn">
+                    Enable Motion
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+         MEDIA
+         ================================================= -->
+
+            <div class="control-row">
+
+                <button id="imageBtn">
+                    Choose Space Image
+                </button>
+
+                <button id="videoBtn">
+                    Choose Video(s)
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+         GLB
+         ================================================= -->
+
+            <div class="control-row">
+
+                <button id="downloadBtn">
+                    Download Space Sphere (.GLB)
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ===================================================
+       FILE INPUTS
+       =================================================== -->
+
+        <input id="imageInput" type="file" accept="image/*">
+
+        <input id="videoInput" type="file" accept="video/*" multiple>
+
+    </div>
+
+
+    <!-- =====================================================
+     THREE IMPORT MAP
+     ===================================================== -->
+
+    <script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+  }
+}
+</script>
+
+
+    <script type="module">
+
+        import * as THREE from "three";
+
+        import {
+            GLTFExporter
+        } from "three/addons/exporters/GLTFExporter.js";
+
+
+        // =========================================================
+        // SERVICE WORKER
+        // =========================================================
+
+        if (
+            "serviceWorker" in navigator &&
+            (
+                location.protocol === "http:" ||
+                location.protocol === "https:"
+            )
+        ) {
+
+            navigator.serviceWorker
+                .register(
+                    "./sw.js",
+                    {
+                        scope: "./"
+                    }
+                )
+                .then(
+                    registration => {
+
+                        console.log(
+                            "Space Sphere offline cache active:",
+                            registration.scope
+                        );
+
+                    }
+                )
+                .catch(
+                    error => {
+
+                        console.warn(
+                            "Service Worker registration failed:",
+                            error
+                        );
+
+                    }
+                );
+
+        }
+
+
+        // =========================================================
+        // DOM
+        // =========================================================
+
+        const viewer =
+            document.getElementById("viewer");
+
+        const loading =
+            document.getElementById("loading");
+
+        const errorBox =
+            document.getElementById("error");
+
+        const viewStatus =
+            document.getElementById("viewStatus");
+
+        const sensorStatus =
+            document.getElementById("sensorStatus");
+
+        const viewToggleBtn =
+            document.getElementById("viewToggleBtn");
+
+        const sensorBtn =
+            document.getElementById("sensorBtn");
+
+        const imageBtn =
+            document.getElementById("imageBtn");
+
+        const videoBtn =
+            document.getElementById("videoBtn");
+
+        const imageInput =
+            document.getElementById("imageInput");
+
+        const videoInput =
+            document.getElementById("videoInput");
+
+        const downloadBtn =
+            document.getElementById("downloadBtn");
+
+        const distanceSlider =
+            document.getElementById("distanceSlider");
+
+        const distanceValue =
+            document.getElementById("distanceValue");
+
+
+        // =========================================================
+        // THREE
+        // =========================================================
+
+        const scene =
+            new THREE.Scene();
+
+
+        const camera =
+            new THREE.PerspectiveCamera(
+                65,
+                window.innerWidth /
+                window.innerHeight,
+                0.01,
+                10000
+            );
+
+
+        /*
+          IMPORTANT:
+        
+          Outside view uses a normal camera in real 3D space.
+        
+          Inside view moves it into the sphere.
+        */
+
+        camera.position.set(
+            0,
+            0,
+            0.01
+        );
+
+
+        const renderer =
+            new THREE.WebGLRenderer({
+
+                antialias:
+                    true,
+
+                powerPreference:
+                    "high-performance",
+
+                preserveDrawingBuffer:
+                    true,
+
+                alpha:
+                    false
+
+            });
+
+
+        renderer.setPixelRatio(
+            Math.min(
+                window.devicePixelRatio || 1,
+                2
+            )
+        );
+
+
+        renderer.setSize(
+            window.innerWidth,
+            window.innerHeight
+        );
+
+
+        renderer.outputColorSpace =
+            THREE.SRGBColorSpace;
+
+
+        renderer.toneMapping =
+            THREE.ACESFilmicToneMapping;
+
+
+        renderer.toneMappingExposure =
+            1.0;
+
+
+        viewer.appendChild(
+            renderer.domElement
+        );
+
+
+        // =========================================================
+        // STATE
+        // =========================================================
+
+        let insideView =
+            true;
+
+
+        let mediaMode =
+            "image";
+
+
+        let currentTexture =
+            null;
+
+
+        let insideSphere =
+            null;
+
+
+        let outsideSphere =
+            null;
+
+
+        let currentRadius =
+            Number(
+                distanceSlider.value
+            );
+
+
+        // =========================================================
+        // CAMERA ROTATION STATE
+        // =========================================================
+
+        let yaw =
+            0;
+
+
+        let pitch =
+            0;
+
+
+        let orbitYaw =
+            0;
+
+
+        let orbitPitch =
+            0;
+
+
+        const mouseSensitivity =
+            0.0025;
+
+
+        let isDragging =
+            false;
+
+
+        let activePointerId =
+            null;
+
+
+        let lastPointerX =
+            0;
+
+
+        let lastPointerY =
+            0;
+
+
+        // =========================================================
+        // SENSOR STATE
+        // =========================================================
+
+        let sensorAvailable =
+            "DeviceOrientationEvent"
+            in window;
+
+
+        let sensorEnabled =
+            false;
+
+
+        let sensorInitialized =
+            false;
+
+
+        let sensorQuaternion =
+            new THREE.Quaternion();
+
+
+        let sensorReference =
+            new THREE.Quaternion();
+
+
+        const deviceEuler =
+            new THREE.Euler(
+                0,
+                0,
+                0,
+                "YXZ"
+            );
+
+
+        const zee =
+            new THREE.Vector3(
+                0,
+                0,
+                1
+            );
+
+
+        const deviceQuaternion =
+            new THREE.Quaternion();
+
+
+        const screenQuaternion =
+            new THREE.Quaternion();
+
+
+        let screenAngle =
+            0;
+
+
+        let latestOrientation =
+            null;
+
+
+        // =========================================================
+        // VIDEO STATE
+        // =========================================================
+
+        let videoFiles = [];
+
+        let videoURLs = [];
+
+        let currentVideoIndex =
+            0;
+
+        let currentVideo =
+            null;
+
+        let nextVideo =
+            null;
+
+        let currentVideoTexture =
+            null;
+
+        let nextVideoTexture =
+            null;
+
+
+        // =========================================================
+        // LOADING CONTROL
+        // =========================================================
+
+        let loadingTimer =
+            null;
+
+
+        function showLoading(
+            text = "Loading..."
+        ) {
+
+            clearTimeout(
+                loadingTimer
+            );
+
+
+            loading.textContent =
+                text;
+
+
+            loading.style.display =
+                "flex";
+
+
+            loading.classList.remove(
+                "hidden"
+            );
+
+
+            loadingTimer =
+                setTimeout(
+                    () => {
+
+                        hideLoading();
+
+                    },
+                    8000
+                );
+
+        }
+
+
+        function hideLoading() {
+
+            clearTimeout(
+                loadingTimer
+            );
+
+
+            loading.classList.add(
+                "hidden"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    if (
+                        loading.classList.contains(
+                            "hidden"
+                        )
+                    ) {
+
+                        loading.style.display =
+                            "none";
+
+                    }
+
+                },
+                260
+            );
+
+        }
+
+
+        // =========================================================
+        // POINTER DOWN
+        // =========================================================
+
+        viewer.addEventListener(
+            "pointerdown",
+            async event => {
+
+                /*
+                  Desktop:
+                  left mouse only.
+            
+                  Mobile:
+                  touch is allowed.
+                */
+
+                if (
+                    event.pointerType === "mouse" &&
+                    event.button !== 0
+                ) {
+
+                    return;
+
+                }
+
+
+                event.preventDefault();
+
+
+                isDragging =
+                    true;
+
+
+                activePointerId =
+                    event.pointerId;
+
+
+                lastPointerX =
+                    event.clientX;
+
+
+                lastPointerY =
+                    event.clientY;
+
+
+                viewer.classList.add(
+                    "dragging"
+                );
+
+
+                /*
+                  Touch uses normal pointer movement.
+                */
+
+                if (
+                    event.pointerType === "touch"
+                ) {
+
+                    try {
+
+                        viewer.setPointerCapture(
+                            event.pointerId
+                        );
+
+                    }
+                    catch (_) { }
+
+
+                    return;
+
+                }
+
+
+                /*
+                  Mouse uses Pointer Lock.
+            
+                  This makes horizontal and vertical movement
+                  unlimited beyond screen edges.
+                */
+
+                if (
+                    event.pointerType === "mouse"
+                ) {
+
+                    try {
+
+                        if (
+                            document.pointerLockElement !==
+                            viewer
+                        ) {
+
+                            await viewer.requestPointerLock();
+
+                        }
+
+                    }
+                    catch (_) {
+
+                        /*
+                          Fallback to normal pointer movement.
+                        */
+
+                    }
+
+                }
+
+            }
+        );
+
+
+        // =========================================================
+        // POINTER MOVE
+        // =========================================================
+
+        viewer.addEventListener(
+            "pointermove",
+            event => {
+
+                if (
+                    !isDragging
+                ) {
+
+                    return;
+
+                }
+
+
+                if (
+                    activePointerId !== null &&
+                    event.pointerId !==
+                    activePointerId
+                ) {
+
+                    return;
+
+                }
+
+
+                let dx =
+                    0;
+
+
+                let dy =
+                    0;
+
+
+                if (
+                    document.pointerLockElement ===
+                    viewer
+                ) {
+
+                    dx =
+                        event.movementX;
+
+
+                    dy =
+                        event.movementY;
+
+                }
+
+                else {
+
+                    dx =
+                        event.clientX -
+                        lastPointerX;
+
+
+                    dy =
+                        event.clientY -
+                        lastPointerY;
+
+
+                    lastPointerX =
+                        event.clientX;
+
+
+                    lastPointerY =
+                        event.clientY;
+
+                }
+
+
+                if (
+                    insideView
+                ) {
+
+                    /*
+                      Inside = look around.
+                    */
+
+                    yaw -=
+                        dx *
+                        mouseSensitivity;
+
+
+                    pitch -=
+                        dy *
+                        mouseSensitivity;
+
+
+                    yaw %=
+                        Math.PI * 2;
+
+
+                    pitch %=
+                        Math.PI * 2;
+
+
+                }
+                else {
+
+                    /*
+                      Outside = ORBIT camera around the sphere.
+              
+                      The sphere stays at 0,0,0.
+                      Only the camera moves.
+                    */
+
+                    orbitYaw -=
+                        dx *
+                        mouseSensitivity;
+
+
+                    orbitPitch -=
+                        dy *
+                        mouseSensitivity;
+
+
+                    /*
+                      Keep the orbit from flipping upside down.
+              
+                      This is NOT a visual movement limit of the sphere.
+                    */
+
+                    const limit =
+                        Math.PI / 2 -
+                        0.02;
+
+
+                    orbitPitch =
+                        Math.max(
+                            -limit,
+                            Math.min(
+                                limit,
+                                orbitPitch
+                            )
+                        );
+
+                }
+
+
+                if (
+                    insideView
+                ) {
+
+                    applyInsideCamera();
+
+                }
+                else {
+
+                    applyOutsideCamera();
+
+                }
+
+            }
+        );
+
+
+        // =========================================================
+        // POINTER UP
+        // =========================================================
+
+        viewer.addEventListener(
+            "pointerup",
+            event => {
+
+                if (
+                    activePointerId !== null &&
+                    event.pointerId !==
+                    activePointerId
+                ) {
+
+                    return;
+
+                }
+
+
+                stopDragging(
+                    event.pointerId
+                );
+
+            }
+        );
+
+
+        viewer.addEventListener(
+            "pointercancel",
+            event => {
+
+                stopDragging(
+                    event.pointerId
+                );
+
+            }
+        );
+
+
+        window.addEventListener(
+            "mouseup",
+            event => {
+
+                if (
+                    event.button === 0
+                ) {
+
+                    stopDragging();
+
+                }
+
+            }
+        );
+
+
+        window.addEventListener(
+            "blur",
+            () => {
+
+                stopDragging();
+
+            }
+        );
+
+
+        document.addEventListener(
+            "pointerlockchange",
+            () => {
+
+                if (
+                    document.pointerLockElement !==
+                    viewer
+                ) {
+
+                    viewer.classList.remove(
+                        "dragging"
+                    );
+
+                }
+
+            }
+        );
+
+
+        viewer.addEventListener(
+            "contextmenu",
+            event => {
+
+                event.preventDefault();
+
+            }
+        );
+
+
+        function stopDragging(
+            pointerId = null
+        ) {
+
+            isDragging =
+                false;
+
+
+            activePointerId =
+                null;
+
+
+            viewer.classList.remove(
+                "dragging"
+            );
+
+
+            if (
+                pointerId !== null
+            ) {
+
+                try {
+
+                    viewer.releasePointerCapture(
+                        pointerId
+                    );
+
+                }
+                catch (_) { }
+
+            }
+
+
+            if (
+                document.pointerLockElement ===
+                viewer
+            ) {
+
+                try {
+
+                    document.exitPointerLock();
+
+                }
+                catch (_) { }
+
+            }
+
+        }
+
+
+        // =========================================================
+        // INSIDE CAMERA
+        // =========================================================
+
+        function applyInsideCamera() {
+
+            camera.position.set(
+                0,
+                0,
+                0.01
+            );
+
+
+            camera.rotation.order =
+                "YXZ";
+
+
+            camera.rotation.y =
+                yaw;
+
+
+            camera.rotation.x =
+                pitch;
+
+        }
+
+
+        // =========================================================
+        // OUTSIDE CAMERA
+        // =========================================================
+        //
+        // THIS IS THE IMPORTANT FIX.
+        //
+        // Sphere stays at:
+        //
+        //      0, 0, 0
+        //
+        // Camera moves around it:
+        //
+        //        camera
+        //           ↓
+        //       ↗       ↖
+        //        \     /
+        //         \   /
+        //          ●
+        //        sphere
+        //
+        // =========================================================
+
+        function applyOutsideCamera() {
+
+            if (
+                !outsideSphere
+            ) {
+
+                return;
+
+            }
+
+
+            /*
+              The actual sphere radius.
+            */
+
+            const radius =
+                Math.max(
+                    currentRadius,
+                    1
+                );
+
+
+            /*
+              Keep the entire sphere visible.
+          
+              3.0 means the camera sits roughly three sphere
+              radii away from its center.
+            */
+
+            const distance =
+                radius * 3.0;
+
+
+            const cosPitch =
+                Math.cos(
+                    orbitPitch
+                );
+
+
+            const sinPitch =
+                Math.sin(
+                    orbitPitch
+                );
+
+
+            const sinYaw =
+                Math.sin(
+                    orbitYaw
+                );
+
+
+            const cosYaw =
+                Math.cos(
+                    orbitYaw
+                );
+
+
+            /*
+              Proper spherical-coordinate orbit.
+            */
+
+            camera.position.x =
+                distance *
+                cosPitch *
+                sinYaw;
+
+
+            camera.position.y =
+                distance *
+                sinPitch;
+
+
+            camera.position.z =
+                distance *
+                cosPitch *
+                cosYaw;
+
+
+            /*
+              THIS keeps the sphere centered.
+          
+              We do NOT move the sphere.
+          
+              We do NOT rotate the sphere to fake camera movement.
+            */
+
+            camera.lookAt(
+                0,
+                0,
+                0
+            );
+
+        }
+
+
+        // =========================================================
+        // SENSOR SUPPORT
+        // =========================================================
+
+        function updateScreenOrientation() {
+
+            if (
+                screen.orientation &&
+                typeof screen.orientation.angle ===
+                "number"
+            ) {
+
+                screenAngle =
+                    THREE.MathUtils.degToRad(
+                        screen.orientation.angle
+                    );
+
+            }
+            else if (
+                typeof window.orientation ===
+                "number"
+            ) {
+
+                screenAngle =
+                    THREE.MathUtils.degToRad(
+                        window.orientation
+                    );
+
+            }
+            else {
+
+                screenAngle =
+                    0;
+
+            }
+
+        }
+
+
+        function handleDeviceOrientation(
+            event
+        ) {
+
+            if (
+                !sensorEnabled
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                event.alpha === null ||
+                event.beta === null ||
+                event.gamma === null
+            ) {
+
+                return;
+
+            }
+
+
+            latestOrientation =
+                event;
+
+
+            updateScreenOrientation();
+
+
+            const alpha =
+                THREE.MathUtils.degToRad(
+                    event.alpha
+                );
+
+
+            const beta =
+                THREE.MathUtils.degToRad(
+                    event.beta
+                );
+
+
+            const gamma =
+                THREE.MathUtils.degToRad(
+                    event.gamma
+                );
+
+
+            /*
+              Convert phone orientation to a camera quaternion.
+            */
+
+            deviceEuler.set(
+                beta,
+                alpha,
+                -gamma,
+                "YXZ"
+            );
+
+
+            deviceQuaternion
+                .setFromEuler(
+                    deviceEuler
+                );
+
+
+            /*
+              Correct for screen orientation.
+            */
+
+            screenQuaternion
+                .setFromAxisAngle(
+                    zee,
+                    -screenAngle
+                );
+
+
+            deviceQuaternion.multiply(
+                screenQuaternion
+            );
+
+
+            /*
+              Camera coordinate correction.
+            */
+
+            const correction =
+                new THREE.Quaternion()
+                    .setFromAxisAngle(
+                        new THREE.Vector3(
+                            1,
+                            0,
+                            0
+                        ),
+                        -Math.PI / 2
+                    );
+
+
+            deviceQuaternion.multiply(
+                correction
+            );
+
+
+            sensorQuaternion.copy(
+                deviceQuaternion
+            );
+
+
+            /*
+              On the first good sensor reading,
+              remember it as the starting direction.
+          
+              This means the current phone orientation
+              becomes "center".
+            */
+
+            if (
+                !sensorInitialized
+            ) {
+
+                sensorReference
+                    .copy(
+                        sensorQuaternion
+                    )
+                    .invert();
+
+
+                sensorInitialized =
+                    true;
+
+            }
+
+        }
+
+
+        // =========================================================
+        // APPLY SENSOR
+        // =========================================================
+
+        function applySensorCamera() {
+
+            if (
+                !sensorEnabled ||
+                !sensorInitialized ||
+                !insideView ||
+                isDragging
+            ) {
+
+                return;
+
+            }
+
+
+            camera.position.set(
+                0,
+                0,
+                0.01
+            );
+
+
+            camera.quaternion
+                .copy(
+                    sensorReference
+                )
+                .multiply(
+                    sensorQuaternion
+                );
+
+        }
+
+
+        // =========================================================
+        // SENSOR BUTTON
+        // =========================================================
+
+        sensorBtn.addEventListener(
+            "click",
+            async () => {
+
+                if (
+                    !sensorAvailable
+                ) {
+
+                    showError(`
+        <strong>Motion sensors are not available.</strong>
+        <br><br>
+        Use a supported mobile browser/device.
+      `);
+
+                    return;
+
+                }
+
+
+                /*
+                  iOS requires permission through a user gesture.
+                */
+
+                if (
+                    typeof DeviceOrientationEvent
+                        .requestPermission ===
+                    "function"
+                ) {
+
+                    try {
+
+                        const permission =
+                            await DeviceOrientationEvent
+                                .requestPermission();
+
+
+                        if (
+                            permission !==
+                            "granted"
+                        ) {
+
+                            showError(`
+            <strong>Motion permission denied.</strong>
+            <br><br>
+            Allow motion/orientation access in your browser
+            and try again.
+          `);
+
+                            return;
+
+                        }
+
+                    }
+                    catch (error) {
+
+                        console.error(
+                            error
+                        );
+
+
+                        showError(
+                            "Could not request motion permission."
+                        );
+
+
+                        return;
+
+                    }
+
+                }
+
+
+                sensorEnabled =
+                    !sensorEnabled;
+
+
+                if (
+                    sensorEnabled
+                ) {
+
+                    sensorInitialized =
+                        false;
+
+
+                    sensorStatus.style.display =
+                        "block";
+
+
+                    sensorBtn.textContent =
+                        "Motion Enabled ✓";
+
+                }
+                else {
+
+                    sensorInitialized =
+                        false;
+
+
+                    sensorStatus.style.display =
+                        "none";
+
+
+                    sensorBtn.textContent =
+                        "Enable Motion";
+
+
+                    applyManualCamera();
+
+                }
+
+            }
+        );
+
+
+        // =========================================================
+        // REGISTER SENSOR EVENTS
+        // =========================================================
+
+        if (
+            sensorAvailable
+        ) {
+
+            window.addEventListener(
+                "deviceorientationabsolute",
+                handleDeviceOrientation,
+                true
+            );
+
+
+            window.addEventListener(
+                "deviceorientation",
+                handleDeviceOrientation,
+                true
+            );
+
+
+            updateScreenOrientation();
+
+        }
+        else {
+
+            sensorBtn.disabled =
+                true;
+
+
+            sensorBtn.textContent =
+                "Motion Unavailable";
+
+        }
+
+
+        // =========================================================
+        // CREATE SPHERES
+        // =========================================================
+
+        function createSpaceSphere(
+            texture
+        ) {
+
+            if (!texture)
+                return;
+
+
+            // -------------------------------------------------------
+            // REMOVE OLD
+            // -------------------------------------------------------
+
+            if (
+                insideSphere
+            ) {
+
+                scene.remove(
+                    insideSphere
+                );
+
+
+                insideSphere.geometry.dispose();
+
+                insideSphere.material.dispose();
+
+                insideSphere =
+                    null;
+
+            }
+
+
+            if (
+                outsideSphere
+            ) {
+
+                scene.remove(
+                    outsideSphere
+                );
+
+
+                outsideSphere.geometry.dispose();
+
+                outsideSphere.material.dispose();
+
+                outsideSphere =
+                    null;
+
+            }
+
+
+            // -------------------------------------------------------
+            // TEXTURE
+            // -------------------------------------------------------
+
+            texture.colorSpace =
+                THREE.SRGBColorSpace;
+
+
+            texture.wrapS =
+                THREE.RepeatWrapping;
+
+
+            texture.wrapT =
+                THREE.ClampToEdgeWrapping;
+
+
+            texture.minFilter =
+                THREE.LinearFilter;
+
+
+            texture.magFilter =
+                THREE.LinearFilter;
+
+
+            texture.generateMipmaps =
+                false;
+
+
+            texture.needsUpdate =
+                true;
+
+
+            currentTexture =
+                texture;
+
+
+            // =======================================================
+            // INSIDE SPHERE
+            // =======================================================
+
+            const insideGeometry =
+                new THREE.SphereGeometry(
+                    1,
+                    192,
+                    96
+                );
+
+
+            /*
+              Reverse the geometry so we can see the texture
+              while standing inside the sphere.
+            */
+
+            insideGeometry.scale(
+                -1,
+                1,
+                1
+            );
+
+
+            const insideMaterial =
+                new THREE.MeshBasicMaterial({
+
+                    map:
+                        texture,
+
+                    side:
+                        THREE.FrontSide,
+
+                    toneMapped:
+                        false
+
+                });
+
+
+            insideSphere =
+                new THREE.Mesh(
+                    insideGeometry,
+                    insideMaterial
+                );
+
+
+            insideSphere.name =
+                "Space_Inside_Sphere";
+
+
+            insideSphere.position.set(
+                0,
+                0,
+                0
+            );
+
+
+            insideSphere.scale.setScalar(
+                currentRadius
+            );
+
+
+            scene.add(
+                insideSphere
+            );
+
+
+            // =======================================================
+            // OUTSIDE SPHERE
+            // =======================================================
+
+            /*
+              NORMAL OUTWARD-FACING SPHERE.
+          
+              This is a real 3D object.
+          
+              It lives permanently at the origin.
+            */
+
+            const outsideGeometry =
+                new THREE.SphereGeometry(
+                    1,
+                    256,
+                    128
+                );
+
+
+            const outsideMaterial =
+                new THREE.MeshBasicMaterial({
+
+                    map:
+                        texture,
+
+                    side:
+                        THREE.FrontSide,
+
+                    toneMapped:
+                        false
+
+                });
+
+
+            outsideSphere =
+                new THREE.Mesh(
+                    outsideGeometry,
+                    outsideMaterial
+                );
+
+
+            outsideSphere.name =
+                "Space_3D_Outside_Sphere";
+
+
+            outsideSphere.position.set(
+                0,
+                0,
+                0
+            );
+
+
+            outsideSphere.rotation.set(
+                0,
+                0,
+                0
+            );
+
+
+            outsideSphere.scale.setScalar(
+                currentRadius
+            );
+
+
+            scene.add(
+                outsideSphere
+            );
+
+
+            // -------------------------------------------------------
+            // START VIEW
+            // -------------------------------------------------------
+
+            updateViewMode();
+
+        }
+
+
+        // =========================================================
+        // VIEW MODE
+        // =========================================================
+
+        viewToggleBtn.addEventListener(
+            "click",
+            () => {
+
+                insideView =
+                    !insideView;
+
+
+                /*
+                  Sensor orientation is recalibrated when returning
+                  to inside mode.
+                */
+
+                sensorInitialized =
+                    false;
+
+
+                updateViewMode();
+
+            }
+        );
+
+
+        function updateViewMode() {
+
+            if (
+                !insideSphere ||
+                !outsideSphere
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                insideView
+            ) {
+
+                // ---------------------------------------------------
+                // INSIDE
+                // ---------------------------------------------------
+
+                insideSphere.visible =
+                    true;
+
+
+                outsideSphere.visible =
+                    false;
+
+
+                camera.fov =
+                    75;
+
+
+                camera.updateProjectionMatrix();
+
+
+                viewStatus.textContent =
+                    "INSIDE VIEW";
+
+
+                viewToggleBtn.textContent =
+                    "Switch to Outside";
+
+
+                if (
+                    sensorEnabled &&
+                    sensorInitialized
+                ) {
+
+                    applySensorCamera();
+
+                }
+                else {
+
+                    applyInsideCamera();
+
+                }
+
+            }
+            else {
+
+                // ---------------------------------------------------
+                // OUTSIDE
+                // ---------------------------------------------------
+
+                insideSphere.visible =
+                    false;
+
+
+                outsideSphere.visible =
+                    true;
+
+
+                /*
+                  Normal FOV.
+            
+                  Do NOT make this 110° etc.
+                  Huge FOV causes the sphere to look flat.
+                */
+
+                camera.fov =
+                    60;
+
+
+                camera.updateProjectionMatrix();
+
+
+                viewStatus.textContent =
+                    "OUTSIDE • REAL 3D SPHERE";
+
+
+                viewToggleBtn.textContent =
+                    "Switch to Inside";
+
+
+                applyOutsideCamera();
+
+            }
+
+        }
+
+
+        // =========================================================
+        // DISTANCE SLIDER
+        // =========================================================
+
+        distanceSlider.addEventListener(
+            "input",
+            () => {
+
+                currentRadius =
+                    Number(
+                        distanceSlider.value
+                    );
+
+
+                distanceValue.textContent =
+                    currentRadius;
+
+
+                // -----------------------------------------------------
+                // Actual sphere size
+                // -----------------------------------------------------
+
+                if (
+                    insideSphere
+                ) {
+
+                    insideSphere.scale.setScalar(
+                        currentRadius
+                    );
+
+                }
+
+
+                if (
+                    outsideSphere
+                ) {
+
+                    outsideSphere.scale.setScalar(
+                        currentRadius
+                    );
+
+                }
+
+
+                // -----------------------------------------------------
+                // OUTSIDE CAMERA
+                // -----------------------------------------------------
+
+                if (
+                    !insideView
+                ) {
+
+                    applyOutsideCamera();
+
+                }
+
+            }
+        );
+
+
+        // =========================================================
+        // IMAGE PICKER
+        // =========================================================
+
+        imageBtn.addEventListener(
+            "click",
+            () => {
+
+                imageInput.click();
+
+            }
+        );
+
+
+        imageInput.addEventListener(
+            "change",
+            event => {
+
+                const file =
+                    event.target.files?.[0];
+
+
+                if (
+                    file
+                ) {
+
+                    loadImageFile(
+                        file
+                    );
+
+                }
+
+            }
+        );
+
+
+        // =========================================================
+        // IMAGE LOADER
+        // =========================================================
+
+        function loadImageFile(
+            file
+        ) {
+
+            if (
+                !file ||
+                !file.type.startsWith(
+                    "image/"
+                )
+            ) {
+
+                showError(
+                    "Please select a valid image file."
+                );
+
+                return;
+
+            }
+
+
+            stopAllVideo();
+
+
+            mediaMode =
+                "image";
+
+
+            showLoading(
+                "Loading space image..."
+            );
+
+
+            const url =
+                URL.createObjectURL(
+                    file
+                );
+
+
+            textureLoader.load(
+
+                url,
+
+                texture => {
+
+                    createSpaceSphere(
+                        texture
+                    );
+
+
+                    hideLoading();
+
+
+                    errorBox.style.display =
+                        "none";
+
+
+                    URL.revokeObjectURL(
+                        url
+                    );
+
+                },
+
+                undefined,
+
+                () => {
+
+                    hideLoading();
+
+
+                    URL.revokeObjectURL(
+                        url
+                    );
+
+
+                    showError(
+                        "Couldn't load the selected image."
+                    );
+
+                }
+
+            );
+
+        }
+
+
+        // =========================================================
+        // VIDEO PICKER
+        // =========================================================
+
+        videoBtn.addEventListener(
+            "click",
+            () => {
+
+                videoInput.click();
+
+            }
+        );
+
+
+        videoInput.addEventListener(
+            "change",
+            event => {
+
+                const files =
+                    Array.from(
+                        event.target.files || []
+                    );
+
+
+                const validVideos =
+                    files.filter(
+                        file =>
+                            file.type &&
+                            file.type.startsWith(
+                                "video/"
+                            )
+                    );
+
+
+                if (
+                    !validVideos.length
+                ) {
+
+                    showError(
+                        "Please select one or more valid videos."
+                    );
+
+                    return;
+
+                }
+
+
+                loadVideoPlaylist(
+                    validVideos
+                );
+
+            }
+        );
+
+
+        // =========================================================
+        // VIDEO PLAYLIST
+        // =========================================================
+
+        async function loadVideoPlaylist(
+            files
+        ) {
+
+            stopAllVideo();
+
+
+            mediaMode =
+                "video";
+
+
+            videoFiles =
+                files;
+
+
+            currentVideoIndex =
+                0;
+
+
+            showLoading(
+                files.length === 1
+                    ? "Loading space video..."
+                    : `Loading ${files.length} space videos...`
+            );
+
+
+            try {
+
+                videoURLs =
+                    files.map(
+                        file =>
+                            URL.createObjectURL(
+                                file
+                            )
+                    );
+
+
+                currentVideo =
+                    createVideoElement(
+                        videoURLs[0]
+                    );
+
+
+                await waitForVideoReady(
+                    currentVideo
+                );
+
+
+                nextVideo =
+                    createVideoElement(
+                        videoURLs[
+                        getNextVideoIndex()
+                        ]
+                    );
+
+
+                preloadVideo(
+                    nextVideo
+                );
+
+
+                currentVideoTexture =
+                    createVideoTexture(
+                        currentVideo
+                    );
+
+
+                nextVideoTexture =
+                    createVideoTexture(
+                        nextVideo
+                    );
+
+
+                createSpaceSphere(
+                    currentVideoTexture
+                );
+
+
+                currentVideo.muted =
+                    true;
+
+
+                currentVideo.playsInline =
+                    true;
+
+
+                await currentVideo.play();
+
+
+                currentVideo.addEventListener(
+                    "ended",
+                    handleVideoEnded
+                );
+
+
+                videoBtn.textContent =
+                    files.length === 1
+                        ? "Change Video"
+                        : `${files.length} Videos Loaded`;
+
+
+                hideLoading();
+
+
+                errorBox.style.display =
+                    "none";
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Video error:",
+                    error
+                );
+
+
+                stopAllVideo();
+
+
+                hideLoading();
+
+
+                showError(`
+      <strong>Couldn't play the selected video.</strong>
+      <br><br>
+      The browser may not support this video's codec.
+    `);
+
+            }
+
+        }
+
+
+        // =========================================================
+        // VIDEO ELEMENT
+        // =========================================================
+
+        function createVideoElement(
+            url
+        ) {
+
+            const video =
+                document.createElement(
+                    "video"
+                );
+
+
+            video.src =
+                url;
+
+
+            video.preload =
+                "auto";
+
+
+            video.muted =
+                true;
+
+
+            video.loop =
+                false;
+
+
+            video.playsInline =
+                true;
+
+
+            video.controls =
+                false;
+
+
+            video.setAttribute(
+                "playsinline",
+                ""
+            );
+
+
+            video.style.position =
+                "fixed";
+
+
+            video.style.width =
+                "1px";
+
+
+            video.style.height =
+                "1px";
+
+
+            video.style.opacity =
+                "0";
+
+
+            video.style.pointerEvents =
+                "none";
+
+
+            document.body.appendChild(
+                video
+            );
+
+
+            return video;
+
+        }
+
+
+        // =========================================================
+        // VIDEO READY
+        // =========================================================
+
+        function waitForVideoReady(
+            video
+        ) {
+
+            return new Promise(
+                (
+                    resolve,
+                    reject
+                ) => {
+
+                    if (
+                        video.readyState >= 3
+                    ) {
+
+                        resolve();
+
+                        return;
+
+                    }
+
+
+                    const ready =
+                        () => {
+
+                            cleanup();
+
+                            resolve();
+
+                        };
+
+
+                    const failed =
+                        () => {
+
+                            cleanup();
+
+                            reject(
+                                new Error(
+                                    "Video failed to load."
+                                )
+                            );
+
+                        };
+
+
+                    function cleanup() {
+
+                        video.removeEventListener(
+                            "canplay",
+                            ready
+                        );
+
+
+                        video.removeEventListener(
+                            "error",
+                            failed
+                        );
+
+                    }
+
+
+                    video.addEventListener(
+                        "canplay",
+                        ready,
+                        {
+                            once:
+                                true
+                        }
+                    );
+
+
+                    video.addEventListener(
+                        "error",
+                        failed,
+                        {
+                            once:
+                                true
+                        }
+                    );
+
+                }
+            );
+
+        }
+
+
+        // =========================================================
+        // VIDEO TEXTURE
+        // =========================================================
+
+        function createVideoTexture(
+            video
+        ) {
+
+            const texture =
+                new THREE.VideoTexture(
+                    video
+                );
+
+
+            texture.colorSpace =
+                THREE.SRGBColorSpace;
+
+
+            texture.minFilter =
+                THREE.LinearFilter;
+
+
+            texture.magFilter =
+                THREE.LinearFilter;
+
+
+            texture.generateMipmaps =
+                false;
+
+
+            texture.wrapS =
+                THREE.RepeatWrapping;
+
+
+            texture.wrapT =
+                THREE.ClampToEdgeWrapping;
+
+
+            return texture;
+
+        }
+
+
+        // =========================================================
+        // VIDEO PRELOAD
+        // =========================================================
+
+        function preloadVideo(
+            video
+        ) {
+
+            if (
+                !video
+            )
+                return;
+
+
+            video.load();
+
+        }
+
+
+        // =========================================================
+        // VIDEO NEXT
+        // =========================================================
+
+        function getNextVideoIndex() {
+
+            if (
+                videoFiles.length === 0
+            ) {
+
+                return 0;
+
+            }
+
+
+            return (
+                currentVideoIndex + 1
+            ) %
+                videoFiles.length;
+
+        }
+
+
+        // =========================================================
+        // VIDEO END
+        // =========================================================
+
+        async function handleVideoEnded() {
+
+            if (
+                mediaMode !==
+                "video"
+            ) {
+
+                return;
+
+            }
+
+
+            const nextIndex =
+                getNextVideoIndex();
+
+
+            const oldVideo =
+                currentVideo;
+
+
+            const oldTexture =
+                currentVideoTexture;
+
+
+            const newVideo =
+                nextVideo;
+
+
+            const newTexture =
+                nextVideoTexture;
+
+
+            currentVideoIndex =
+                nextIndex;
+
+
+            currentVideo =
+                newVideo;
+
+
+            currentVideoTexture =
+                newTexture;
+
+
+            /*
+              Create another next video so the playlist can
+              continue forever.
+            */
+
+            const preloadIndex =
+                getNextVideoIndex();
+
+
+            nextVideo =
+                createVideoElement(
+                    videoURLs[
+                    preloadIndex
+                    ]
+                );
+
+
+            nextVideoTexture =
+                createVideoTexture(
+                    nextVideo
+                );
+
+
+            preloadVideo(
+                nextVideo
+            );
+
+
+            // -------------------------------------------------------
+            // Swap texture
+            // -------------------------------------------------------
+
+            if (
+                insideSphere
+            ) {
+
+                insideSphere.material.map =
+                    currentVideoTexture;
+
+
+                insideSphere.material.needsUpdate =
+                    true;
+
+            }
+
+
+            if (
+                outsideSphere
+            ) {
+
+                outsideSphere.material.map =
+                    currentVideoTexture;
+
+
+                outsideSphere.material.needsUpdate =
+                    true;
+
+            }
+
+
+            // -------------------------------------------------------
+            // Start new video
+            // -------------------------------------------------------
+
+            currentVideo.currentTime =
+                0;
+
+
+            currentVideo.muted =
+                true;
+
+
+            try {
+
+                await currentVideo.play();
+
+            }
+
+            catch (error) {
+
+                console.warn(
+                    "Next video autoplay failed:",
+                    error
+                );
+
+            }
+
+
+            // -------------------------------------------------------
+            // Clean old
+            // -------------------------------------------------------
+
+            if (
+                oldVideo
+            ) {
+
+                oldVideo.removeEventListener(
+                    "ended",
+                    handleVideoEnded
+                );
+
+
+                try {
+
+                    oldVideo.pause();
+
+                }
+
+                catch (_) { }
+
+
+                oldVideo.remove();
+
+            }
+
+
+            if (
+                oldTexture
+            ) {
+
+                oldTexture.dispose();
+
+            }
+
+        }
+
+
+        // =========================================================
+        // STOP ALL VIDEO
+        // =========================================================
+
+        function stopAllVideo() {
+
+            if (
+                currentVideo
+            ) {
+
+                try {
+
+                    currentVideo.pause();
+
+                }
+
+                catch (_) { }
+
+
+                currentVideo.remove();
+
+            }
+
+
+            if (
+                nextVideo
+            ) {
+
+                try {
+
+                    nextVideo.pause();
+
+                }
+
+                catch (_) { }
+
+
+                nextVideo.remove();
+
+            }
+
+
+            if (
+                currentVideoTexture
+            ) {
+
+                currentVideoTexture.dispose();
+
+            }
+
+
+            if (
+                nextVideoTexture
+            ) {
+
+                nextVideoTexture.dispose();
+
+            }
+
+
+            for (
+                const url of videoURLs
+            ) {
+
+                try {
+
+                    URL.revokeObjectURL(
+                        url
+                    );
+
+                }
+
+                catch (_) { }
+
+            }
+
+
+            videoFiles = [];
+
+            videoURLs = [];
+
+            currentVideoIndex = 0;
+
+            currentVideo = null;
+
+            nextVideo = null;
+
+            currentVideoTexture = null;
+
+            nextVideoTexture = null;
+
+        }
+
+
+        // =========================================================
+        // TEXTURE LOADER
+        // =========================================================
+
+        const textureLoader =
+            new THREE.TextureLoader();
+
+
+        // =========================================================
+        // AUTOMATIC LOCAL IMAGE SEARCH
+        // =========================================================
+
+        const possibleImages = [
+
+            "space.jpg",
+            "space.jpeg",
+            "space.png",
+            "space.webp",
+            "space.avif",
+            "space.gif",
+            "space.jfif"
+
+        ];
+
+
+        async function findLocalSpaceImage() {
+
+            for (
+                const filename of possibleImages
+            ) {
+
+                try {
+
+                    const response =
+                        await fetch(
+                            filename,
+                            {
+                                method:
+                                    "HEAD",
+
+                                cache:
+                                    "force-cache"
+                            }
+                        );
+
+
+                    if (
+                        !response.ok
+                    ) {
+
+                        continue;
+
+                    }
+
+
+                    const texture =
+                        await new Promise(
+                            (
+                                resolve,
+                                reject
+                            ) => {
+
+                                textureLoader.load(
+                                    filename,
+                                    resolve,
+                                    undefined,
+                                    reject
+                                );
+
+                            }
+                        );
+
+
+                    createSpaceSphere(
+                        texture
+                    );
+
+
+                    errorBox.style.display =
+                        "none";
+
+
+                    return true;
+
+                }
+
+                catch (_) {
+
+                    // Try next format.
+
+                }
+
+            }
+
+
+            return false;
+
+        }
+
+
+        /*
+          Background load.
+        
+          This does NOT block the UI.
+        */
+
+        findLocalSpaceImage();
+
+
+        // =========================================================
+        // GLB EXPORT
+        // =========================================================
+        //
+        // Image:
+        //   exports the image texture.
+        //
+        // Video:
+        //   captures the CURRENT video frame and embeds
+        //   that frame into the GLB.
+        //
+        // A GLB cannot contain a continuously streaming HTML5
+        // video player as a normal embedded video texture.
+        // =========================================================
+
+        downloadBtn.addEventListener(
+            "click",
+            async () => {
+
+                if (
+                    !currentTexture
+                ) {
+
+                    alert(
+                        "Load an image or video first."
+                    );
+
+                    return;
+
+                }
+
+
+                downloadBtn.disabled =
+                    true;
+
+
+                downloadBtn.textContent =
+                    "Creating GLB...";
+
+
+                let exportTexture =
+                    null;
+
+
+                let exportCanvas =
+                    null;
+
+
+                try {
+
+                    // ---------------------------------------------------
+                    // VIDEO FRAME
+                    // ---------------------------------------------------
+
+                    if (
+                        mediaMode ===
+                        "video"
+                    ) {
+
+                        if (
+                            !currentVideo ||
+                            currentVideo.readyState < 2
+                        ) {
+
+                            throw new Error(
+                                "Current video frame is not ready."
+                            );
+
+                        }
+
+
+                        exportCanvas =
+                            document.createElement(
+                                "canvas"
+                            );
+
+
+                        exportCanvas.width =
+                            currentVideo.videoWidth ||
+                            2048;
+
+
+                        exportCanvas.height =
+                            currentVideo.videoHeight ||
+                            1024;
+
+
+                        const ctx =
+                            exportCanvas.getContext(
+                                "2d"
+                            );
+
+
+                        ctx.drawImage(
+                            currentVideo,
+                            0,
+                            0,
+                            exportCanvas.width,
+                            exportCanvas.height
+                        );
+
+
+                        exportTexture =
+                            new THREE.CanvasTexture(
+                                exportCanvas
+                            );
+
+
+                        exportTexture.colorSpace =
+                            THREE.SRGBColorSpace;
+
+
+                        exportTexture.minFilter =
+                            THREE.LinearFilter;
+
+
+                        exportTexture.magFilter =
+                            THREE.LinearFilter;
+
+
+                        exportTexture.generateMipmaps =
+                            false;
+
+                    }
+                    else {
+
+                        exportTexture =
+                            currentTexture;
+
+                    }
+
+
+                    // ---------------------------------------------------
+                    // NORMAL OUTWARD-FACING 3D SPHERE
+                    // ---------------------------------------------------
+
+                    const geometry =
+                        new THREE.SphereGeometry(
+                            currentRadius,
+                            256,
+                            128
+                        );
+
+
+                    const material =
+                        new THREE.MeshBasicMaterial({
+
+                            map:
+                                exportTexture,
+
+                            side:
+                                THREE.FrontSide,
+
+                            toneMapped:
+                                false
+
+                        });
+
+
+                    const mesh =
+                        new THREE.Mesh(
+                            geometry,
+                            material
+                        );
+
+
+                    mesh.name =
+                        "Space_3D_Sphere";
+
+
+                    const exportScene =
+                        new THREE.Scene();
+
+
+                    exportScene.add(
+                        mesh
+                    );
+
+
+                    // ---------------------------------------------------
+                    // EXPORT GLB
+                    // ---------------------------------------------------
+
+                    const exporter =
+                        new GLTFExporter();
+
+
+                    const result =
+                        await new Promise(
+                            (
+                                resolve,
+                                reject
+                            ) => {
+
+                                exporter.parse(
+
+                                    exportScene,
+
+                                    resolve,
+
+                                    reject,
+
+                                    {
+
+                                        binary:
+                                            true,
+
+                                        embedImages:
+                                            true,
+
+                                        onlyVisible:
+                                            true,
+
+                                        maxTextureSize:
+                                            8192
+
+                                    }
+
+                                );
+
+                            }
+                        );
+
+
+                    const blob =
+                        new Blob(
+                            [result],
+                            {
+                                type:
+                                    "model/gltf-binary"
+                            }
+                        );
+
+
+                    const url =
+                        URL.createObjectURL(
+                            blob
+                        );
+
+
+                    const link =
+                        document.createElement(
+                            "a"
+                        );
+
+
+                    link.href =
+                        url;
+
+
+                    link.download =
+                        "space-sphere.glb";
+
+
+                    document.body.appendChild(
+                        link
+                    );
+
+
+                    link.click();
+
+
+                    link.remove();
+
+
+                    setTimeout(
+                        () => {
+
+                            URL.revokeObjectURL(
+                                url
+                            );
+
+                        },
+                        10000
+                    );
+
+
+                    geometry.dispose();
+
+                    material.dispose();
+
+
+                    if (
+                        exportTexture !==
+                        currentTexture
+                    ) {
+
+                        exportTexture.dispose();
+
+                    }
+
+
+                    downloadBtn.textContent =
+                        "GLB Downloaded ✓";
+
+
+                    setTimeout(
+                        () => {
+
+                            downloadBtn.textContent =
+                                "Download Space Sphere (.GLB)";
+
+                        },
+                        2500
+                    );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "GLB export error:",
+                        error
+                    );
+
+
+                    alert(
+                        "GLB export failed: " +
+                        error.message
+                    );
+
+
+                    downloadBtn.textContent =
+                        "Download Space Sphere (.GLB)";
+
+                }
+
+                finally {
+
+                    downloadBtn.disabled =
+                        false;
+
+                }
+
+            }
+        );
+
+
+        // =========================================================
+        // ERROR HELPER
+        // =========================================================
+
+        function showError(
+            message
+        ) {
+
+            errorBox.innerHTML =
+                message;
+
+
+            errorBox.style.display =
+                "block";
+
+        }
+
+
+        // =========================================================
+        // RESIZE
+        // =========================================================
+
+        window.addEventListener(
+            "resize",
+            () => {
+
+                camera.aspect =
+                    window.innerWidth /
+                    window.innerHeight;
+
+
+                camera.updateProjectionMatrix();
+
+
+                renderer.setPixelRatio(
+                    Math.min(
+                        window.devicePixelRatio || 1,
+                        2
+                    )
+                );
+
+
+                renderer.setSize(
+                    window.innerWidth,
+                    window.innerHeight
+                );
+
+            }
+        );
+
+
+        // =========================================================
+        // RENDER LOOP
+        // =========================================================
+
+        function animate() {
+
+            requestAnimationFrame(
+                animate
+            );
+
+
+            /*
+              Device motion drives inside mode when the user
+              isn't manually dragging.
+            */
+
+            if (
+                sensorEnabled &&
+                sensorInitialized &&
+                insideView &&
+                !isDragging
+            ) {
+
+                applySensorCamera();
+
+            }
+
+
+            renderer.render(
+                scene,
+                camera
+            );
+
+        }
+
+
+        animate();
+
+    </script>
+
+</body>
+
+</html>
