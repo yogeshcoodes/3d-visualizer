@@ -1,5 +1,5 @@
 const CACHE_NAME =
-    "space-sphere-v2";
+    "space-sphere-v5";
 
 
 const APP_SHELL = [
@@ -34,10 +34,6 @@ self.addEventListener(
                 .then(
                     async cache => {
 
-                        /*
-                          Cache local application shell.
-                        */
-
                         try {
 
                             await cache.addAll(
@@ -49,17 +45,12 @@ self.addEventListener(
                         catch (error) {
 
                             console.warn(
-                                "App shell cache warning:",
+                                "App shell cache:",
                                 error
                             );
 
                         }
 
-
-                        /*
-                          Cache CDN resources individually so one failed
-                          dependency doesn't prevent installation.
-                        */
 
                         await Promise.allSettled(
 
@@ -94,7 +85,7 @@ self.addEventListener(
                                     catch (error) {
 
                                         console.warn(
-                                            "CDN cache warning:",
+                                            "CDN cache:",
                                             url,
                                             error
                                         );
@@ -170,10 +161,6 @@ self.addEventListener(
         const request =
             event.request;
 
-
-        /*
-          Only GET requests.
-        */
 
         if (
             request.method !==
@@ -278,7 +265,11 @@ self.addEventListener(
             event.respondWith(
 
                 fetch(
-                    request
+                    request,
+                    {
+                        cache:
+                            "no-cache"
+                    }
                 )
                     .then(
                         response => {
