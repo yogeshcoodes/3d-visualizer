@@ -525,10 +525,10 @@
                 fixed;
 
             top:
-                calc(12px + env(safe-area-inset-top));
+                calc(60px + env(safe-area-inset-top));
 
             right:
-                calc(60px + env(safe-area-inset-right));
+                calc(12px + env(safe-area-inset-right));
 
             z-index:
                 1000;
@@ -599,7 +599,7 @@
                 fixed;
 
             top:
-                calc(60px + env(safe-area-inset-top));
+                calc(108px + env(safe-area-inset-top));
 
             right:
                 calc(12px + env(safe-area-inset-right));
@@ -1054,6 +1054,29 @@
 
 
 
+        #app.fullscreen-active #settingsBtn {
+
+            display:
+                flex;
+        }
+
+
+
+        #app.fullscreen-active.fullscreen-idle #fullscreenCornerBtn,
+
+        #app.fullscreen-active.fullscreen-idle #settingsBtn,
+
+        #app.fullscreen-active.fullscreen-idle #sensorStatus {
+
+            opacity:
+                0;
+
+            pointer-events:
+                none;
+        }
+
+
+
         /* =====================================================
    MOBILE
    \===================================================== */
@@ -1160,6 +1183,43 @@
 
                 border-radius:
                     9px;
+            }
+
+
+
+            #settingsBtn {
+
+                width:
+                    36px;
+
+                height:
+                    36px;
+
+                min-width:
+                    36px;
+
+                min-height:
+                    36px;
+
+                top:
+                    calc(52px + env(safe-area-inset-top));
+
+                right:
+                    calc(8px + env(safe-area-inset-right));
+
+                font-size:
+                    16px;
+
+                border-radius:
+                    9px;
+            }
+
+
+
+            #settingsPanel {
+
+                top:
+                    calc(96px + env(safe-area-inset-top));
             }
 
 
@@ -2268,6 +2328,11 @@
 
 
 
+        let fullscreenIdleTimer =
+            null;
+
+
+
         function wakeUI() {
 
             ui.classList.remove(
@@ -2279,6 +2344,38 @@
             clearTimeout(
                 idleTimer
             );
+
+
+
+            clearTimeout(
+                fullscreenIdleTimer
+            );
+
+
+
+            app.classList.remove(
+                "fullscreen-idle"
+            );
+
+
+
+            if (
+                document.fullscreenElement
+            ) {
+
+                fullscreenIdleTimer =
+                    setTimeout(
+                        () => {
+
+                            app.classList.add(
+                                "fullscreen-idle"
+                            );
+
+                        },
+                        2200
+                    );
+
+            }
 
 
 
@@ -4921,6 +5018,10 @@
                     fullscreenBtn.textContent =
                         "Exit Fullscreen";
 
+
+
+                    wakeUI();
+
                 }
 
                 else {
@@ -4934,6 +5035,12 @@
 
                     app.classList.remove(
                         "fullscreen-active"
+                    );
+
+
+
+                    app.classList.remove(
+                        "fullscreen-idle"
                     );
 
 
