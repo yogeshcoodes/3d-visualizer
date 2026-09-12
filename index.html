@@ -17,8 +17,8 @@
 
     <style>
         /* =====================================================
-       GLOBAL
-       ===================================================== */
+   GLOBAL
+   \===================================================== */
 
         * {
             box-sizing: border-box;
@@ -54,9 +54,10 @@
         }
 
 
+
         /* =====================================================
-       APP
-       ===================================================== */
+   APP
+   \===================================================== */
 
         #app {
 
@@ -73,9 +74,10 @@
         }
 
 
+
         /* =====================================================
-       VIEWER
-       ===================================================== */
+   VIEWER
+   \===================================================== */
 
         #viewer {
 
@@ -99,9 +101,11 @@
         }
 
 
+
         #viewer.dragging {
             cursor: none;
         }
+
 
 
         #viewer canvas {
@@ -113,9 +117,10 @@
         }
 
 
+
         /* =====================================================
-       STATUS
-       ===================================================== */
+   STATUS
+   \===================================================== */
 
         #viewStatus {
 
@@ -170,9 +175,10 @@
         }
 
 
+
         /* =====================================================
-       SENSOR STATUS
-       ===================================================== */
+   SENSOR STATUS
+   \===================================================== */
 
         #sensorStatus {
 
@@ -221,9 +227,10 @@
         }
 
 
+
         /* =====================================================
-       LOADING
-       ===================================================== */
+   LOADING
+   \===================================================== */
 
         #loading {
 
@@ -269,15 +276,17 @@
         }
 
 
+
         #loading.hidden {
             opacity:
                 0;
         }
 
 
+
         /* =====================================================
-       ERROR
-       ===================================================== */
+   ERROR
+   \===================================================== */
 
         #error {
 
@@ -318,6 +327,7 @@
         }
 
 
+
         #error code {
 
             font-family:
@@ -326,9 +336,10 @@
         }
 
 
+
         /* =====================================================
-       TOAST
-       ===================================================== */
+   TOAST
+   \===================================================== */
 
         #toast {
 
@@ -390,6 +401,7 @@
         }
 
 
+
         #toast.show {
 
             opacity:
@@ -400,9 +412,10 @@
         }
 
 
+
         /* =====================================================
-       FULLSCREEN CORNER BUTTON
-       ===================================================== */
+   FULLSCREEN CORNER BUTTON
+   \===================================================== */
 
         #fullscreenCornerBtn {
 
@@ -484,6 +497,7 @@
         }
 
 
+
         #fullscreenCornerBtn:hover {
             opacity:
                 .7;
@@ -493,15 +507,17 @@
         }
 
 
+
         #fullscreenCornerBtn:active {
             transform:
                 scale(.96);
         }
 
 
+
         /* =====================================================
-       BOTTOM UI
-       ===================================================== */
+   BOTTOM UI
+   \===================================================== */
 
         .ui {
 
@@ -548,10 +564,12 @@
         }
 
 
+
         .ui.idle {
             opacity:
                 .40;
         }
+
 
 
         .ui:hover,
@@ -559,6 +577,7 @@
             opacity:
                 1;
         }
+
 
 
         .title {
@@ -586,9 +605,10 @@
         }
 
 
+
         /* =====================================================
-       CONTROL ROW
-       ===================================================== */
+   CONTROL ROW
+   \===================================================== */
 
         .control-row {
 
@@ -615,9 +635,10 @@
         }
 
 
+
         /* =====================================================
-       BUTTONS
-       ===================================================== */
+   BUTTONS
+   \===================================================== */
 
         button {
 
@@ -666,6 +687,7 @@
         }
 
 
+
         button:hover {
 
             transform:
@@ -676,11 +698,13 @@
         }
 
 
+
         button:active {
 
             transform:
                 translateY(0);
         }
+
 
 
         button:disabled {
@@ -696,9 +720,10 @@
         }
 
 
+
         /* =====================================================
-       CONTROL PANEL
-       ===================================================== */
+   CONTROL PANEL
+   \===================================================== */
 
         #controlsPanel {
 
@@ -729,6 +754,7 @@
         }
 
 
+
         .slider-row {
 
             display:
@@ -748,10 +774,12 @@
         }
 
 
+
         .slider-row:first-child {
             margin-top:
                 0;
         }
+
 
 
         .slider-label {
@@ -773,6 +801,7 @@
         }
 
 
+
         .slider-value {
 
             flex:
@@ -787,6 +816,7 @@
             text-align:
                 right;
         }
+
 
 
         .slider {
@@ -808,9 +838,10 @@
         }
 
 
+
         /* =====================================================
-       FULLSCREEN MODE
-       ===================================================== */
+   FULLSCREEN MODE
+   \===================================================== */
 
         html.fullscreen-mode,
         html.fullscreen-mode body,
@@ -827,6 +858,7 @@
         }
 
 
+
         #app.fullscreen-active #viewStatus,
 
         #app.fullscreen-active #sensorStatus,
@@ -838,6 +870,7 @@
         }
 
 
+
         #app.fullscreen-active #fullscreenCornerBtn {
 
             display:
@@ -845,9 +878,10 @@
         }
 
 
+
         /* =====================================================
-       MOBILE
-       ===================================================== */
+   MOBILE
+   \===================================================== */
 
         @media (max-width:600px) {
 
@@ -862,6 +896,7 @@
             }
 
 
+
             .title {
 
                 font-size:
@@ -869,11 +904,13 @@
             }
 
 
+
             .control-row {
 
                 gap:
                     5px;
             }
+
 
 
             button {
@@ -892,11 +929,13 @@
             }
 
 
+
             #controlsPanel {
 
                 padding:
                     7px 9px;
             }
+
 
 
             .slider-label {
@@ -909,6 +948,7 @@
             }
 
 
+
             .slider-value {
 
                 flex-basis:
@@ -917,6 +957,7 @@
                 font-size:
                     9px;
             }
+
 
 
             #fullscreenCornerBtn {
@@ -947,6 +988,7 @@
             }
 
 
+
             #toast {
 
                 bottom:
@@ -959,9 +1001,10 @@
         }
 
 
+
         /* =====================================================
-       SMALL PHONES
-       ===================================================== */
+   SMALL PHONES
+   \===================================================== */
 
         @media (max-width:380px) {
 
@@ -978,6 +1021,7 @@
             }
 
 
+
             .slider-label {
 
                 flex-basis:
@@ -986,28 +1030,31 @@
 
         }
     </style>
-</head>
 
+</head>
 
 <body>
 
     <div id="app">
 
 
+
         <!-- ===================================================
-       VIEWER
-       =================================================== -->
+   VIEWER
+   \=================================================== -->
 
         <div id="viewer"></div>
 
 
+
         <!-- ===================================================
-       STATUS
-       =================================================== -->
+   STATUS
+   \=================================================== -->
 
         <div id="viewStatus">
             INSIDE VIEW
         </div>
+
 
 
         <div id="sensorStatus">
@@ -1015,43 +1062,49 @@
         </div>
 
 
+
         <!-- ===================================================
-       LOADING
-       =================================================== -->
+   LOADING
+   \=================================================== -->
 
         <div id="loading">
             Loading...
         </div>
 
 
+
         <!-- ===================================================
-       ERROR
-       =================================================== -->
+   ERROR
+   \=================================================== -->
 
         <div id="error"></div>
 
 
+
         <!-- ===================================================
-       TOAST
-       =================================================== -->
+   TOAST
+   \=================================================== -->
 
         <div id="toast"></div>
 
 
+
         <!-- ===================================================
-       FULLSCREEN CORNER BUTTON
-       =================================================== -->
+   FULLSCREEN CORNER BUTTON
+   \=================================================== -->
 
         <button id="fullscreenCornerBtn" aria-label="Exit Fullscreen" title="Exit Fullscreen">
             ⛶
         </button>
 
 
+
         <!-- ===================================================
-       BOTTOM UI
-       =================================================== -->
+   BOTTOM UI
+   \=================================================== -->
 
         <div class="ui" id="ui">
+
 
 
             <div class="title">
@@ -1059,16 +1112,18 @@
             </div>
 
 
+
             <!-- =================================================
-         CONTROLS
-         ================================================= -->
+     CONTROLS
+     \================================================= -->
 
             <div id="controlsPanel">
 
 
+
                 <!-- =================================================
-           SPACE DISTANCE — INSIDE ONLY
-           ================================================= -->
+       SPACE DISTANCE — INSIDE ONLY
+       \================================================= -->
 
                 <div id="distanceOnly" class="slider-row">
 
@@ -1077,7 +1132,9 @@
                     </div>
 
 
+
                     <input id="distanceSlider" class="slider" type="range" min="0" max="100" value="50" step="1">
+
 
 
                     <div id="distanceValue" class="slider-value">
@@ -1087,9 +1144,10 @@
                 </div>
 
 
+
                 <!-- =================================================
-           FRAME STRETCH — INSIDE ONLY
-           ================================================= -->
+       FRAME STRETCH — INSIDE ONLY
+       \================================================= -->
 
                 <div id="frameStretchOnly" class="slider-row">
 
@@ -1098,7 +1156,9 @@
                     </div>
 
 
+
                     <input id="frameStretchSlider" class="slider" type="range" min="0" max="100" value="100" step="1">
+
 
 
                     <div id="frameStretchValue" class="slider-value">
@@ -1108,9 +1168,10 @@
                 </div>
 
 
+
                 <!-- =================================================
-           IMAGE X — BOTH VIEWS
-           ================================================= -->
+       IMAGE X — BOTH VIEWS
+       \================================================= -->
 
                 <div class="slider-row">
 
@@ -1119,7 +1180,9 @@
                     </div>
 
 
+
                     <input id="rotationXSlider" class="slider" type="range" min="-180" max="180" value="0" step="1">
+
 
 
                     <div id="rotationXValue" class="slider-value">
@@ -1129,9 +1192,10 @@
                 </div>
 
 
+
                 <!-- =================================================
-           IMAGE Y — BOTH VIEWS
-           ================================================= -->
+       IMAGE Y — BOTH VIEWS
+       \================================================= -->
 
                 <div class="slider-row">
 
@@ -1140,7 +1204,9 @@
                     </div>
 
 
+
                     <input id="rotationYSlider" class="slider" type="range" min="-180" max="180" value="0" step="1">
+
 
 
                     <div id="rotationYValue" class="slider-value">
@@ -1150,14 +1216,17 @@
                 </div>
 
 
+
             </div>
 
 
+
             <!-- =================================================
-         VIEW / MOTION / FULLSCREEN
-         ================================================= -->
+     VIEW / MOTION / FULLSCREEN
+     \================================================= -->
 
             <div class="control-row">
+
 
 
                 <button id="viewToggleBtn">
@@ -1165,9 +1234,11 @@
                 </button>
 
 
+
                 <button id="sensorBtn">
                     Enable Motion
                 </button>
+
 
 
                 <button id="fullscreenBtn">
@@ -1175,14 +1246,17 @@
                 </button>
 
 
+
             </div>
 
 
+
             <!-- =================================================
-         MEDIA
-         ================================================= -->
+     MEDIA
+     \================================================= -->
 
             <div class="control-row">
+
 
 
                 <button id="imageBtn">
@@ -1190,19 +1264,23 @@
                 </button>
 
 
+
                 <button id="videoBtn">
                     Choose Video(s)
                 </button>
 
 
+
             </div>
 
 
+
             <!-- =================================================
-         GLB
-         ================================================= -->
+     GLB
+     \================================================= -->
 
             <div class="control-row">
+
 
 
                 <button id="downloadBtn">
@@ -1210,17 +1288,21 @@
                 </button>
 
 
+
             </div>
+
 
 
         </div>
 
 
+
         <!-- ===================================================
-       INPUTS
-       =================================================== -->
+   INPUTS
+   \=================================================== -->
 
         <input id="imageInput" type="file" accept="image/*">
+
 
 
         <input id="videoInput" type="file" accept="video/*" multiple>
@@ -1228,30 +1310,34 @@
     </div>
 
 
+
     <!-- =====================================================
-     THREE.JS
-     ===================================================== -->
+ THREE.JS
+ \===================================================== -->
 
     <script type="importmap">
+
 {
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
-  }
+"imports": {
+"three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+}
 }
 </script>
-
 
     <script type="module">
 
 
+
         import * as THREE from "three";
+
 
 
         import {
             GLTFExporter
         } from
             "three/addons/exporters/GLTFExporter.js";
+
 
 
         // =========================================================
@@ -1264,10 +1350,12 @@
             );
 
 
+
         const viewer =
             document.getElementById(
                 "viewer"
             );
+
 
 
         const ui =
@@ -1276,10 +1364,12 @@
             );
 
 
+
         const loading =
             document.getElementById(
                 "loading"
             );
+
 
 
         const errorBox =
@@ -1288,10 +1378,12 @@
             );
 
 
+
         const toast =
             document.getElementById(
                 "toast"
             );
+
 
 
         const viewStatus =
@@ -1300,10 +1392,12 @@
             );
 
 
+
         const sensorStatus =
             document.getElementById(
                 "sensorStatus"
             );
+
 
 
         const viewToggleBtn =
@@ -1312,10 +1406,12 @@
             );
 
 
+
         const sensorBtn =
             document.getElementById(
                 "sensorBtn"
             );
+
 
 
         const fullscreenBtn =
@@ -1324,10 +1420,12 @@
             );
 
 
+
         const fullscreenCornerBtn =
             document.getElementById(
                 "fullscreenCornerBtn"
             );
+
 
 
         const imageBtn =
@@ -1336,10 +1434,12 @@
             );
 
 
+
         const videoBtn =
             document.getElementById(
                 "videoBtn"
             );
+
 
 
         const imageInput =
@@ -1348,10 +1448,12 @@
             );
 
 
+
         const videoInput =
             document.getElementById(
                 "videoInput"
             );
+
 
 
         const downloadBtn =
@@ -1360,10 +1462,12 @@
             );
 
 
+
         const controlsPanel =
             document.getElementById(
                 "controlsPanel"
             );
+
 
 
         const distanceOnly =
@@ -1372,10 +1476,12 @@
             );
 
 
+
         const frameStretchOnly =
             document.getElementById(
                 "frameStretchOnly"
             );
+
 
 
         const distanceSlider =
@@ -1384,10 +1490,12 @@
             );
 
 
+
         const distanceValue =
             document.getElementById(
                 "distanceValue"
             );
+
 
 
         const frameStretchSlider =
@@ -1396,10 +1504,12 @@
             );
 
 
+
         const frameStretchValue =
             document.getElementById(
                 "frameStretchValue"
             );
+
 
 
         const rotationXSlider =
@@ -1408,10 +1518,12 @@
             );
 
 
+
         const rotationYSlider =
             document.getElementById(
                 "rotationYSlider"
             );
+
 
 
         const rotationXValue =
@@ -1420,10 +1532,12 @@
             );
 
 
+
         const rotationYValue =
             document.getElementById(
                 "rotationYValue"
             );
+
 
 
         // =========================================================
@@ -1432,6 +1546,7 @@
 
         const scene =
             new THREE.Scene();
+
 
 
         const camera =
@@ -1447,11 +1562,13 @@
             );
 
 
+
         camera.position.set(
             0,
             0,
             0.01
         );
+
 
 
         const renderer =
@@ -1472,6 +1589,7 @@
             });
 
 
+
         renderer.setPixelRatio(
             Math.min(
                 window.devicePixelRatio || 1,
@@ -1480,27 +1598,33 @@
         );
 
 
+
         renderer.setSize(
             window.innerWidth,
             window.innerHeight
         );
 
 
+
         renderer.outputColorSpace =
             THREE.SRGBColorSpace;
+
 
 
         renderer.toneMapping =
             THREE.ACESFilmicToneMapping;
 
 
+
         renderer.toneMappingExposure =
             1.0;
+
 
 
         viewer.appendChild(
             renderer.domElement
         );
+
 
 
         // Texture loader used by local and remote image loading.
@@ -1512,6 +1636,7 @@
         );
 
 
+
         // =========================================================
         // STATE
         // =========================================================
@@ -1520,32 +1645,40 @@
             true;
 
 
+
         let mediaMode =
             "image";
+
 
 
         let currentTexture =
             null;
 
 
+
         let insideSphere =
             null;
+
 
 
         let outsideSphere =
             null;
 
 
+
         let currentRadius =
             512;
+
 
 
         let imageRotationX =
             0;
 
 
+
         let imageRotationY =
             0;
+
 
 
         let frameStretch =
@@ -1555,13 +1688,16 @@
             2.0;
 
 
+
         let viewportAspect =
             window.innerWidth /
             window.innerHeight;
 
 
+
         let viewportHeight =
             window.innerHeight;
+
 
 
         // =========================================================
@@ -1572,24 +1708,30 @@
             0;
 
 
+
         let pitch =
             0;
+
 
 
         let orbitYaw =
             0;
 
 
+
         let orbitPitch =
             0;
+
 
 
         const mouseSensitivity =
             0.0025;
 
 
+
         let outsideZoom =
             1;
+
 
 
         // =========================================================
@@ -1600,32 +1742,40 @@
             new Map();
 
 
+
         let isDragging =
             false;
+
 
 
         let activeMousePointer =
             null;
 
 
+
         let lastPointerX =
             0;
+
 
 
         let lastPointerY =
             0;
 
 
+
         let isPinching =
             false;
+
 
 
         let pinchStartDistance =
             0;
 
 
+
         let pinchStartZoom =
             1;
+
 
 
         // =========================================================
@@ -1637,28 +1787,35 @@
             in window;
 
 
+
         let sensorEnabled =
             false;
+
 
 
         let sensorInitialized =
             false;
 
 
+
         let sensorQuaternion =
             new THREE.Quaternion();
+
 
 
         let sensorReference =
             new THREE.Quaternion();
 
 
+
         let smoothedSensorQuaternion =
             new THREE.Quaternion();
 
 
+
         let hasSmoothedSensor =
             false;
+
 
 
         const deviceEuler =
@@ -1670,16 +1827,20 @@
             );
 
 
+
         const rawDeviceQuaternion =
             new THREE.Quaternion();
+
 
 
         const screenQuaternion =
             new THREE.Quaternion();
 
 
+
         const correctionQuaternion =
             new THREE.Quaternion();
+
 
 
         const axisX =
@@ -1690,6 +1851,7 @@
             );
 
 
+
         const axisZ =
             new THREE.Vector3(
                 0,
@@ -1698,8 +1860,10 @@
             );
 
 
+
         let screenAngle =
             0;
+
 
 
         // =========================================================
@@ -1710,20 +1874,25 @@
             [];
 
 
+
         let videoURLs =
             [];
+
 
 
         let currentVideoIndex =
             0;
 
 
+
         let currentVideo =
             null;
 
 
+
         let currentVideoTexture =
             null;
+
 
 
         // =========================================================
@@ -1732,6 +1901,7 @@
 
         let loadingTimer =
             null;
+
 
 
         function showLoading(
@@ -1743,17 +1913,21 @@
             );
 
 
+
             loading.textContent =
                 text;
+
 
 
             loading.style.display =
                 "flex";
 
 
+
             loading.classList.remove(
                 "hidden"
             );
+
 
 
             loadingTimer =
@@ -1765,6 +1939,7 @@
         }
 
 
+
         function hideLoading() {
 
             clearTimeout(
@@ -1772,9 +1947,11 @@
             );
 
 
+
             loading.classList.add(
                 "hidden"
             );
+
 
 
             setTimeout(
@@ -1790,12 +1967,14 @@
         }
 
 
+
         // =========================================================
         // TOAST
         // =========================================================
 
         let toastTimer =
             null;
+
 
 
         function showToast(
@@ -1808,13 +1987,16 @@
             );
 
 
+
             toast.textContent =
                 message;
+
 
 
             toast.classList.add(
                 "show"
             );
+
 
 
             toastTimer =
@@ -1832,6 +2014,7 @@
         }
 
 
+
         // =========================================================
         // ERROR
         // =========================================================
@@ -1844,10 +2027,12 @@
                 message;
 
 
+
             errorBox.style.display =
                 "block";
 
         }
+
 
 
         // =========================================================
@@ -1858,6 +2043,7 @@
             null;
 
 
+
         function wakeUI() {
 
             ui.classList.remove(
@@ -1865,9 +2051,11 @@
             );
 
 
+
             clearTimeout(
                 idleTimer
             );
+
 
 
             if (
@@ -1891,6 +2079,7 @@
         }
 
 
+
         window.addEventListener(
             "pointermove",
             wakeUI,
@@ -1899,6 +2088,7 @@
                     true
             }
         );
+
 
 
         window.addEventListener(
@@ -1911,6 +2101,7 @@
         );
 
 
+
         window.addEventListener(
             "pointerup",
             wakeUI,
@@ -1919,6 +2110,7 @@
                     true
             }
         );
+
 
 
         window.addEventListener(
@@ -1931,7 +2123,9 @@
         );
 
 
+
         wakeUI();
+
 
 
         // =========================================================
@@ -1952,10 +2146,12 @@
         }
 
 
+
         function getPinchDistance() {
 
             const touches =
                 getTouchPointers();
+
 
 
             if (
@@ -1965,6 +2161,7 @@
                 return 0;
 
             }
+
 
 
             return Math.hypot(
@@ -1980,6 +2177,7 @@
         }
 
 
+
         // =========================================================
         // POINTER DOWN
         // =========================================================
@@ -1989,6 +2187,7 @@
             async event => {
 
                 wakeUI();
+
 
 
                 if (
@@ -2002,7 +2201,9 @@
                 }
 
 
+
                 event.preventDefault();
+
 
 
                 activePointers.set(
@@ -2018,6 +2219,7 @@
                             event.clientY
                     }
                 );
+
 
 
                 // -----------------------------------------------------
@@ -2040,8 +2242,10 @@
                     catch (_) { }
 
 
+
                     const touches =
                         getTouchPointers();
+
 
 
                     if (
@@ -2053,21 +2257,26 @@
                             true;
 
 
+
                         isDragging =
                             false;
+
 
 
                         pinchStartDistance =
                             getPinchDistance();
 
 
+
                         pinchStartZoom =
                             outsideZoom;
+
 
 
                         return;
 
                     }
+
 
 
                     if (
@@ -2078,12 +2287,15 @@
                             true;
 
 
+
                         activeMousePointer =
                             event.pointerId;
 
 
+
                         lastPointerX =
                             event.clientX;
+
 
 
                         lastPointerY =
@@ -2092,9 +2304,11 @@
                     }
 
 
+
                     return;
 
                 }
+
 
 
                 // -----------------------------------------------------
@@ -2105,16 +2319,20 @@
                     true;
 
 
+
                 activeMousePointer =
                     event.pointerId;
+
 
 
                 lastPointerX =
                     event.clientX;
 
 
+
                 lastPointerY =
                     event.clientY;
+
 
 
                 try {
@@ -2136,6 +2354,7 @@
         );
 
 
+
         // =========================================================
         // POINTER MOVE
         // =========================================================
@@ -2145,6 +2364,7 @@
             event => {
 
                 wakeUI();
+
 
 
                 if (
@@ -2170,6 +2390,7 @@
                 }
 
 
+
                 // -----------------------------------------------------
                 // OUTSIDE PINCH
                 // -----------------------------------------------------
@@ -2185,6 +2406,7 @@
                         getPinchDistance();
 
 
+
                     if (
                         pinchStartDistance > 0
                     ) {
@@ -2192,6 +2414,7 @@
                         const ratio =
                             distance /
                             pinchStartDistance;
+
 
 
                         outsideZoom =
@@ -2207,14 +2430,17 @@
                             );
 
 
+
                         applyOutsideCamera();
 
                     }
 
 
+
                     return;
 
                 }
+
 
 
                 if (
@@ -2226,12 +2452,15 @@
                 }
 
 
+
                 let dx =
                     0;
 
 
+
                 let dy =
                     0;
+
 
 
                 if (
@@ -2241,6 +2470,7 @@
 
                     dx =
                         event.movementX;
+
 
 
                     dy =
@@ -2255,19 +2485,23 @@
                         lastPointerX;
 
 
+
                     dy =
                         event.clientY -
                         lastPointerY;
+
 
 
                     lastPointerX =
                         event.clientX;
 
 
+
                     lastPointerY =
                         event.clientY;
 
                 }
+
 
 
                 if (
@@ -2279,17 +2513,21 @@
                         mouseSensitivity;
 
 
+
                     pitch -=
                         dy *
                         mouseSensitivity;
+
 
 
                     yaw %=
                         Math.PI * 2;
 
 
+
                     pitch %=
                         Math.PI * 2;
+
 
 
                     applyInsideCamera();
@@ -2303,6 +2541,7 @@
                         mouseSensitivity;
 
 
+
                     /*
                       OUTSIDE vertical reversed.
                     */
@@ -2312,9 +2551,11 @@
                         mouseSensitivity;
 
 
+
                     const limit =
                         Math.PI / 2 -
                         0.02;
+
 
 
                     orbitPitch =
@@ -2328,12 +2569,14 @@
                         );
 
 
+
                     applyOutsideCamera();
 
                 }
 
             }
         );
+
 
 
         // =========================================================
@@ -2347,9 +2590,11 @@
                 wakeUI();
 
 
+
                 activePointers.delete(
                     event.pointerId
                 );
+
 
 
                 if (
@@ -2359,6 +2604,7 @@
 
                     const touches =
                         getTouchPointers();
+
 
 
                     if (
@@ -2371,6 +2617,7 @@
                     }
 
 
+
                     if (
                         touches.length === 0
                     ) {
@@ -2379,10 +2626,12 @@
                             false;
 
 
+
                         activeMousePointer =
                             null;
 
                     }
+
 
 
                     return;
@@ -2390,10 +2639,12 @@
                 }
 
 
+
                 stopDragging();
 
             }
         );
+
 
 
         viewer.addEventListener(
@@ -2405,12 +2656,15 @@
                 );
 
 
+
                 isPinching =
                     false;
 
 
+
                 isDragging =
                     false;
+
 
 
                 activeMousePointer =
@@ -2418,6 +2672,7 @@
 
             }
         );
+
 
 
         window.addEventListener(
@@ -2436,6 +2691,7 @@
         );
 
 
+
         window.addEventListener(
             "blur",
             () => {
@@ -2448,23 +2704,28 @@
         );
 
 
+
         function stopDragging() {
 
             isDragging =
                 false;
 
 
+
             activeMousePointer =
                 null;
+
 
 
             isPinching =
                 false;
 
 
+
             viewer.classList.remove(
                 "dragging"
             );
+
 
 
             if (
@@ -2483,6 +2744,7 @@
             }
 
         }
+
 
 
         document.addEventListener(
@@ -2504,6 +2766,7 @@
         );
 
 
+
         viewer.addEventListener(
             "contextmenu",
             event => {
@@ -2512,6 +2775,7 @@
 
             }
         );
+
 
 
         // =========================================================
@@ -2527,18 +2791,22 @@
             );
 
 
+
             camera.rotation.order =
                 "YXZ";
+
 
 
             camera.rotation.y =
                 yaw;
 
 
+
             camera.rotation.x =
                 pitch;
 
         }
+
 
 
         // =========================================================
@@ -2556,11 +2824,13 @@
             }
 
 
+
             const radius =
                 Math.max(
                     currentRadius,
                     1
                 );
+
 
 
             const distance =
@@ -2569,10 +2839,12 @@
                 outsideZoom;
 
 
+
             const cp =
                 Math.cos(
                     orbitPitch
                 );
+
 
 
             const sp =
@@ -2581,16 +2853,19 @@
                 );
 
 
+
             const sy =
                 Math.sin(
                     orbitYaw
                 );
 
 
+
             const cy =
                 Math.cos(
                     orbitYaw
                 );
+
 
 
             camera.position.set(
@@ -2609,6 +2884,7 @@
             );
 
 
+
             /*
               Always aim at the real sphere center.
             */
@@ -2620,6 +2896,7 @@
             );
 
         }
+
 
 
         // =========================================================
@@ -2663,6 +2940,7 @@
         }
 
 
+
         function handleDeviceOrientation(
             event
         ) {
@@ -2676,6 +2954,7 @@
             }
 
 
+
             if (
                 event.alpha === null ||
                 event.beta === null ||
@@ -2687,7 +2966,9 @@
             }
 
 
+
             updateScreenOrientation();
+
 
 
             const alpha =
@@ -2696,16 +2977,19 @@
                 );
 
 
+
             const beta =
                 THREE.MathUtils.degToRad(
                     event.beta
                 );
 
 
+
             const gamma =
                 THREE.MathUtils.degToRad(
                     event.gamma
                 );
+
 
 
             deviceEuler.set(
@@ -2716,10 +3000,12 @@
             );
 
 
+
             rawDeviceQuaternion
                 .setFromEuler(
                     deviceEuler
                 );
+
 
 
             screenQuaternion
@@ -2729,9 +3015,11 @@
                 );
 
 
+
             rawDeviceQuaternion.multiply(
                 screenQuaternion
             );
+
 
 
             correctionQuaternion
@@ -2741,14 +3029,17 @@
                 );
 
 
+
             rawDeviceQuaternion.multiply(
                 correctionQuaternion
             );
 
 
+
             sensorQuaternion.copy(
                 rawDeviceQuaternion
             );
+
 
 
             if (
@@ -2762,12 +3053,15 @@
                     .invert();
 
 
+
                 sensorInitialized =
                     true;
 
 
+
                 hasSmoothedSensor =
                     false;
+
 
 
                 showToast(
@@ -2777,6 +3071,7 @@
             }
 
         }
+
 
 
         // =========================================================
@@ -2797,11 +3092,13 @@
             }
 
 
+
             camera.position.set(
                 0,
                 0,
                 0.01
             );
+
 
 
             const target =
@@ -2812,6 +3109,7 @@
                     );
 
 
+
             if (
                 !hasSmoothedSensor
             ) {
@@ -2819,6 +3117,7 @@
                 smoothedSensorQuaternion.copy(
                     target
                 );
+
 
 
                 hasSmoothedSensor =
@@ -2836,6 +3135,7 @@
             }
 
 
+
             camera.quaternion.copy(
                 smoothedSensorQuaternion
             );
@@ -2843,15 +3143,27 @@
         }
 
 
+
         // =========================================================
         // SENSOR BUTTON
         // =========================================================
+
+        // Listen to one orientation stream only.
+        // Using a single event avoids duplicate/conflicting motion updates.
+        window.addEventListener(
+            "deviceorientation",
+            handleDeviceOrientation,
+            { passive: true }
+        );
+
+
 
         sensorBtn.addEventListener(
             "click",
             async () => {
 
                 wakeUI();
+
 
 
                 if (
@@ -2863,12 +3175,15 @@
                     );
 
 
+
                     return;
 
                 }
 
 
+
                 if (
+                    !sensorEnabled &&
                     typeof DeviceOrientationEvent
                         .requestPermission ===
                     "function"
@@ -2881,6 +3196,7 @@
                                 .requestPermission();
 
 
+
                         if (
                             permission !==
                             "granted"
@@ -2889,6 +3205,7 @@
                             showToast(
                                 "Motion permission was denied."
                             );
+
 
 
                             return;
@@ -2904,9 +3221,11 @@
                         );
 
 
+
                         showToast(
                             "Could not access motion sensors."
                         );
+
 
 
                         return;
@@ -2916,8 +3235,10 @@
                 }
 
 
+
                 sensorEnabled =
                     !sensorEnabled;
+
 
 
                 if (
@@ -2928,16 +3249,20 @@
                         false;
 
 
+
                     hasSmoothedSensor =
                         false;
+
 
 
                     sensorStatus.style.display =
                         "block";
 
 
+
                     sensorBtn.textContent =
                         "Motion Enabled ✓";
+
 
 
                     showToast(
@@ -2952,19 +3277,24 @@
                         false;
 
 
+
                     hasSmoothedSensor =
                         false;
+
 
 
                     sensorStatus.style.display =
                         "none";
 
 
+
                     sensorBtn.textContent =
                         "Enable Motion";
 
 
+
                     applyInsideCamera();
+
 
 
                     showToast(
@@ -2975,6 +3305,7 @@
 
             }
         );
+
 
 
         // =========================================================
@@ -2989,10 +3320,12 @@
                 );
 
 
+
             const y =
                 THREE.MathUtils.degToRad(
                     imageRotationY
                 );
+
 
 
             if (
@@ -3003,10 +3336,12 @@
                     x;
 
 
+
                 insideSphere.rotation.y =
                     y;
 
             }
+
 
 
             if (
@@ -3017,12 +3352,14 @@
                     x;
 
 
+
                 outsideSphere.rotation.y =
                     y;
 
             }
 
         }
+
 
 
         rotationXSlider.addEventListener(
@@ -3035,17 +3372,21 @@
                     );
 
 
+
                 rotationXValue.textContent =
                     `${imageRotationX}°`;
 
 
+
                 applyImageRotation();
+
 
 
                 wakeUI();
 
             }
         );
+
 
 
         rotationYSlider.addEventListener(
@@ -3058,17 +3399,21 @@
                     );
 
 
+
                 rotationYValue.textContent =
                     `${imageRotationY}°`;
 
 
+
                 applyImageRotation();
+
 
 
                 wakeUI();
 
             }
         );
+
 
 
         // =========================================================
@@ -3097,13 +3442,16 @@
                 );
 
 
+
             frameStretchValue.textContent =
                 `${frameStretch}%`;
+
 
 
             updateAllFrameStretchMaterials();
 
         }
+
 
 
         frameStretchSlider.addEventListener(
@@ -3116,6 +3464,7 @@
 
             }
         );
+
 
 
         // =========================================================
@@ -3143,11 +3492,13 @@
                     };
 
 
+
                     shader.uniforms.sourceAspect =
                     {
                         value:
                             sourceAspect
                     };
+
 
 
                     shader.uniforms.viewportAspect =
@@ -3157,11 +3508,13 @@
                     };
 
 
+
                     shader.uniforms.viewportHeight =
                     {
                         value:
                             viewportHeight
                     };
+
 
 
                     shader.uniforms.flatFrame =
@@ -3171,8 +3524,10 @@
                     };
 
 
+
                     material.userData.frameShader =
                         shader;
+
 
 
                     /*
@@ -3184,145 +3539,156 @@
 
                     shader.fragmentShader =
                         `uniform float frameStretch;
-          uniform float sourceAspect;
-          uniform float viewportAspect;
-          uniform float viewportHeight;
-          uniform float flatFrame;
+      uniform float sourceAspect;
+      uniform float viewportAspect;
+      uniform float viewportHeight;
+      uniform float flatFrame;
 
-          ${shader.fragmentShader}`.replace(
+      ${shader.fragmentShader}`.replace(
 
                             "#include <map_fragment>",
 
                             `
-          #if defined( USE_MAP )
+      #if defined( USE_MAP )
 
-            float stretch =
-              clamp(
-                frameStretch,
-                0.0,
-                1.0
-              );
+        float stretch =
+          clamp(
+            frameStretch,
+            0.0,
+            1.0
+          );
 
-            float targetAspect =
-                            sourceAspect /
-                            viewportAspect;
+        float targetAspect =
+                        sourceAspect /
+                        viewportAspect;
 
-            /*
-              Current renderer UV area is treated as
-              the full stretched frame.
+        /*
+          Current renderer UV area is treated as
+          the full stretched frame.
 
-              We calculate a scale that moves gradually
-              from contain-style framing at 0% to full
-              coverage at 100%.
-            */
+          We calculate a scale that moves gradually
+          from contain-style framing at 0% to full
+          coverage at 100%.
+        */
 
-            float containScaleX = 1.0;
-            float containScaleY = 1.0;
+        float containScaleX = 1.0;
+        float containScaleY = 1.0;
 
-            /*
-              Because the supplied panorama is normally
-              2:1, preserve that frame in UV-space.
-            */
+        /*
+          Because the supplied panorama is normally
+          2:1, preserve that frame in UV-space.
+        */
 
-            if (
-                            targetAspect > 1.0
-            ) {
+        if (
+                        targetAspect > 1.0
+        ) {
 
-                            containScaleY =
-                                1.0 /
-                                targetAspect;
+                        containScaleY =
+                            1.0 /
+                            targetAspect;
 
-            }
+        }
 
-            else {
+        else {
 
-              containScaleX =
-                targetAspect;
+          containScaleX =
+            targetAspect;
 
-            }
-
-
-                        float originalFrameScale =
-                            0.50;
+        }
 
 
-                        containScaleX *=
-                            originalFrameScale;
+
+                    float originalFrameScale =
+                        0.50;
 
 
-                        containScaleY *=
-                            originalFrameScale;
+
+                    containScaleX *=
+                        originalFrameScale;
 
 
-            float scaleX =
-              mix(
-                containScaleX,
-                1.0,
-                stretch
-              );
 
-            float scaleY =
-              mix(
-                containScaleY,
-                1.0,
-                stretch
-              );
+                    containScaleY *=
+                        originalFrameScale;
 
 
-                        vec2 centeredUV =
-                            ( vMapUv - 0.5 );
+
+        float scaleX =
+          mix(
+            containScaleX,
+            1.0,
+            stretch
+          );
+
+        float scaleY =
+          mix(
+            containScaleY,
+            1.0,
+            stretch
+          );
 
 
-                        vec2 scaledUV =
-                            centeredUV /
-                            vec2(
-                                scaleX,
-                                scaleY
-                            ) +
-                            0.5;
+
+                    vec2 centeredUV =
+                        ( vMapUv - 0.5 );
 
 
-            bool insideFrame =
-              scaledUV.x >= 0.0 &&
-              scaledUV.x <= 1.0 &&
-              scaledUV.y >= 0.0 &&
-              scaledUV.y <= 1.0;
+
+                    vec2 scaledUV =
+                        centeredUV /
+                        vec2(
+                            scaleX,
+                            scaleY
+                        ) +
+                        0.5;
 
 
-            if (
-              !insideFrame
-            ) {
 
-                            discard;
-
-            }
-
-            else {
-
-              vec4 sampledDiffuseColor =
-                                    texture2D(
-                                        map,
-                                        scaledUV
-                                    );
+        bool insideFrame =
+          scaledUV.x >= 0.0 &&
+          scaledUV.x <= 1.0 &&
+          scaledUV.y >= 0.0 &&
+          scaledUV.y <= 1.0;
 
 
-              diffuseColor *=
-                sampledDiffuseColor;
 
-            }
+        if (
+          !insideFrame
+        ) {
 
-          #endif
-          `
+                        discard;
+
+        }
+
+        else {
+
+          vec4 sampledDiffuseColor =
+                                texture2D(
+                                    map,
+                                    scaledUV
+                                );
+
+
+
+          diffuseColor *=
+            sampledDiffuseColor;
+
+        }
+
+      #endif
+      `
 
                         );
 
                 };
 
 
+
             material.needsUpdate =
                 true;
 
         }
+
 
 
         // =========================================================
@@ -3342,8 +3708,10 @@
             }
 
 
+
             const shader =
                 material.userData.frameShader;
+
 
 
             if (
@@ -3355,9 +3723,11 @@
                 );
 
 
+
                 return;
 
             }
+
 
 
             if (
@@ -3408,6 +3778,7 @@
         }
 
 
+
         // =========================================================
         // ALL FRAME STRETCH MATERIALS
         // =========================================================
@@ -3425,6 +3796,7 @@
             }
 
 
+
             if (
                 outsideSphere
             ) {
@@ -3436,6 +3808,7 @@
             }
 
         }
+
 
 
         // =========================================================
@@ -3455,6 +3828,7 @@
             }
 
 
+
             // -------------------------------------------------------
             // OLD INSIDE
             // -------------------------------------------------------
@@ -3468,15 +3842,18 @@
                 );
 
 
+
                 insideSphere.geometry.dispose();
 
                 insideSphere.material.dispose();
+
 
 
                 insideSphere =
                     null;
 
             }
+
 
 
             // -------------------------------------------------------
@@ -3492,15 +3869,18 @@
                 );
 
 
+
                 outsideSphere.geometry.dispose();
 
                 outsideSphere.material.dispose();
+
 
 
                 outsideSphere =
                     null;
 
             }
+
 
 
             // -------------------------------------------------------
@@ -3511,28 +3891,35 @@
                 THREE.SRGBColorSpace;
 
 
+
             texture.wrapS =
                 THREE.ClampToEdgeWrapping;
+
 
 
             texture.wrapT =
                 THREE.ClampToEdgeWrapping;
 
 
+
             texture.minFilter =
                 THREE.LinearFilter;
+
 
 
             texture.magFilter =
                 THREE.LinearFilter;
 
 
+
             texture.generateMipmaps =
                 false;
 
 
+
             texture.needsUpdate =
                 true;
+
 
 
             const mediaImage =
@@ -3558,8 +3945,10 @@
             }
 
 
+
             currentTexture =
                 texture;
+
 
 
             // =======================================================
@@ -3574,11 +3963,13 @@
                 );
 
 
+
             insideGeometry.scale(
                 -1,
                 1,
                 1
             );
+
 
 
             const insideMaterial =
@@ -3596,6 +3987,7 @@
                 });
 
 
+
             insideSphere =
                 new THREE.Mesh(
                     insideGeometry,
@@ -3603,8 +3995,10 @@
                 );
 
 
+
             insideSphere.name =
                 "Space_Inside_Sphere";
+
 
 
             insideSphere.position.set(
@@ -3614,14 +4008,17 @@
             );
 
 
+
             insideSphere.scale.setScalar(
                 currentRadius
             );
 
 
+
             scene.add(
                 insideSphere
             );
+
 
 
             // =======================================================
@@ -3634,6 +4031,7 @@
                     256,
                     128
                 );
+
 
 
             const outsideMaterial =
@@ -3651,6 +4049,7 @@
                 });
 
 
+
             outsideSphere =
                 new THREE.Mesh(
                     outsideGeometry,
@@ -3658,8 +4057,10 @@
                 );
 
 
+
             outsideSphere.name =
                 "Space_3D_Outside_Sphere";
+
 
 
             outsideSphere.position.set(
@@ -3669,14 +4070,17 @@
             );
 
 
+
             outsideSphere.scale.setScalar(
                 currentRadius
             );
 
 
+
             scene.add(
                 outsideSphere
             );
+
 
 
             /*
@@ -3691,20 +4095,25 @@
             );
 
 
+
             setupFrameStretchShader(
                 outsideMaterial
             );
 
 
+
             applyImageRotation();
+
 
 
             updateFrameStretch();
 
 
+
             updateViewMode();
 
         }
+
 
 
         // =========================================================
@@ -3725,18 +4134,22 @@
             }
 
 
+
             const value =
                 Number(
                     distanceSlider.value
                 );
 
 
+
             distanceValue.textContent =
                 value;
 
 
+
             const t =
                 value / 100;
+
 
 
             /*
@@ -3751,7 +4164,9 @@
                 );
 
 
+
             camera.updateProjectionMatrix();
+
 
 
             /*
@@ -3766,6 +4181,7 @@
                 );
 
 
+
             if (
                 insideSphere
             ) {
@@ -3775,6 +4191,7 @@
                 );
 
             }
+
 
 
             if (
@@ -3788,9 +4205,11 @@
             }
 
 
+
             applyImageRotation();
 
         }
+
 
 
         distanceSlider.addEventListener(
@@ -3805,6 +4224,7 @@
         );
 
 
+
         // =========================================================
         // VIEW SWITCH
         // =========================================================
@@ -3816,22 +4236,27 @@
                 wakeUI();
 
 
+
                 insideView =
                     !insideView;
+
 
 
                 isPinching =
                     false;
 
 
+
                 outsideZoom =
                     1;
+
 
 
                 updateViewMode();
 
             }
         );
+
 
 
         // =========================================================
@@ -3850,6 +4275,7 @@
             }
 
 
+
             if (
                 insideView
             ) {
@@ -3862,8 +4288,10 @@
                     true;
 
 
+
                 outsideSphere.visible =
                     false;
+
 
 
                 /*
@@ -3874,34 +4302,43 @@
                     "flex";
 
 
+
                 frameStretchOnly.style.display =
                     "flex";
+
 
 
                 distanceSlider.disabled =
                     false;
 
 
+
                 frameStretchSlider.disabled =
                     false;
+
 
 
                 controlsPanel.style.display =
                     "block";
 
 
+
                 updateInsideDistance();
 
 
+
                 updateFrameStretch();
+
 
 
                 viewStatus.textContent =
                     "INSIDE VIEW";
 
 
+
                 viewToggleBtn.textContent =
                     "Switch to Outside";
+
 
 
                 if (
@@ -3931,8 +4368,10 @@
                     false;
 
 
+
                 outsideSphere.visible =
                     true;
+
 
 
                 /*
@@ -3946,16 +4385,20 @@
                     "none";
 
 
+
                 frameStretchOnly.style.display =
                     "none";
+
 
 
                 distanceSlider.disabled =
                     true;
 
 
+
                 frameStretchSlider.disabled =
                     true;
+
 
 
                 /*
@@ -3966,19 +4409,24 @@
                     "block";
 
 
+
                 camera.fov =
                     55;
 
 
+
                 camera.updateProjectionMatrix();
+
 
 
                 viewStatus.textContent =
                     "OUTSIDE • REAL 3D SPHERE";
 
 
+
                 viewToggleBtn.textContent =
                     "Switch to Inside";
+
 
 
                 applyOutsideCamera();
@@ -3986,12 +4434,15 @@
             }
 
 
+
             applyImageRotation();
+
 
 
             updateAllFrameStretchMaterials();
 
         }
+
 
 
         // =========================================================
@@ -4033,9 +4484,11 @@
                     );
 
 
+
                     return;
 
                 }
+
 
 
                 if (
@@ -4065,6 +4518,7 @@
                 );
 
 
+
                 showToast(
                     "Fullscreen is blocked by this browser."
                 );
@@ -4072,6 +4526,7 @@
             }
 
         }
+
 
 
         async function exitFullscreen() {
@@ -4100,11 +4555,13 @@
         }
 
 
+
         fullscreenBtn.addEventListener(
             "click",
             async () => {
 
                 wakeUI();
+
 
 
                 if (
@@ -4125,6 +4582,7 @@
         );
 
 
+
         fullscreenCornerBtn.addEventListener(
             "click",
             async event => {
@@ -4134,10 +4592,12 @@
                 event.stopPropagation();
 
 
+
                 await exitFullscreen();
 
             }
         );
+
 
 
         document.addEventListener(
@@ -4150,6 +4610,7 @@
                     );
 
 
+
                 if (
                     active
                 ) {
@@ -4160,13 +4621,16 @@
                         );
 
 
+
                     app.classList.add(
                         "fullscreen-active"
                     );
 
 
+
                     fullscreenCornerBtn.style.display =
                         "flex";
+
 
 
                     fullscreenBtn.textContent =
@@ -4182,17 +4646,21 @@
                         );
 
 
+
                     app.classList.remove(
                         "fullscreen-active"
                     );
+
 
 
                     fullscreenCornerBtn.style.display =
                         "none";
 
 
+
                     fullscreenBtn.textContent =
                         "Fullscreen";
+
 
 
                     wakeUI();
@@ -4201,6 +4669,7 @@
 
             }
         );
+
 
 
         // =========================================================
@@ -4219,12 +4688,14 @@
         );
 
 
+
         imageInput.addEventListener(
             "change",
             event => {
 
                 const file =
                     event.target.files?.[0];
+
 
 
                 if (
@@ -4239,6 +4710,7 @@
 
             }
         );
+
 
 
         // =========================================================
@@ -4261,16 +4733,20 @@
                 );
 
 
+
                 return;
 
             }
 
 
+
             stopAllVideo();
+
 
 
             mediaMode =
                 "image";
+
 
 
             showLoading(
@@ -4278,10 +4754,12 @@
             );
 
 
+
             const url =
                 URL.createObjectURL(
                     file
                 );
+
 
 
             textureLoader.load(
@@ -4295,16 +4773,20 @@
                     );
 
 
+
                     hideLoading();
+
 
 
                     errorBox.style.display =
                         "none";
 
 
+
                     URL.revokeObjectURL(
                         url
                     );
+
 
 
                     showToast(
@@ -4320,9 +4802,11 @@
                     hideLoading();
 
 
+
                     URL.revokeObjectURL(
                         url
                     );
+
 
 
                     showToast(
@@ -4334,6 +4818,7 @@
             );
 
         }
+
 
 
         // =========================================================
@@ -4352,6 +4837,7 @@
         );
 
 
+
         videoInput.addEventListener(
             "change",
             event => {
@@ -4360,6 +4846,7 @@
                     Array.from(
                         event.target.files || []
                     );
+
 
 
                 const validVideos =
@@ -4372,6 +4859,7 @@
                     );
 
 
+
                 if (
                     !validVideos.length
                 ) {
@@ -4381,9 +4869,11 @@
                     );
 
 
+
                     return;
 
                 }
+
 
 
                 loadVideoPlaylist(
@@ -4392,6 +4882,7 @@
 
             }
         );
+
 
 
         // =========================================================
@@ -4405,16 +4896,20 @@
             stopAllVideo();
 
 
+
             mediaMode =
                 "video";
+
 
 
             videoFiles =
                 files;
 
 
+
             currentVideoIndex =
                 0;
+
 
 
             showLoading(
@@ -4422,6 +4917,7 @@
                     ? "Loading space video..."
                     : `Loading ${files.length} videos...`
             );
+
 
 
             try {
@@ -4435,22 +4931,27 @@
                     );
 
 
+
                 await playVideo(
                     0
                 );
 
 
+
                 hideLoading();
+
 
 
                 errorBox.style.display =
                     "none";
 
 
+
                 videoBtn.textContent =
                     files.length === 1
                         ? "Change Video"
                         : `${files.length} Videos Loaded`;
+
 
 
                 showToast(
@@ -4468,10 +4969,13 @@
                 );
 
 
+
                 stopAllVideo();
 
 
+
                 hideLoading();
+
 
 
                 showToast(
@@ -4481,6 +4985,7 @@
             }
 
         }
+
 
 
         // =========================================================
@@ -4497,9 +5002,11 @@
                 );
 
 
+
             await waitForVideoReady(
                 video
             );
+
 
 
             if (
@@ -4515,9 +5022,11 @@
                 catch (_) { }
 
 
+
                 currentVideo.remove();
 
             }
+
 
 
             if (
@@ -4529,18 +5038,22 @@
             }
 
 
+
             currentVideo =
                 video;
+
 
 
             currentVideoIndex =
                 index;
 
 
+
             currentVideoTexture =
                 createVideoTexture(
                     currentVideo
                 );
+
 
 
             if (
@@ -4551,10 +5064,12 @@
                     currentVideoTexture;
 
 
+
                 insideSphere.material.needsUpdate =
                     true;
 
             }
+
 
 
             if (
@@ -4565,26 +5080,32 @@
                     currentVideoTexture;
 
 
+
                 outsideSphere.material.needsUpdate =
                     true;
 
             }
 
 
+
             currentVideo.muted =
                 true;
+
 
 
             currentVideo.playsInline =
                 true;
 
 
+
             currentVideo.loop =
                 false;
 
 
+
             currentVideo.currentTime =
                 0;
+
 
 
             currentVideo.addEventListener(
@@ -4597,9 +5118,11 @@
             );
 
 
+
             await currentVideo.play();
 
         }
+
 
 
         // =========================================================
@@ -4618,6 +5141,7 @@
             }
 
 
+
             if (
                 !videoURLs.length
             ) {
@@ -4627,12 +5151,14 @@
             }
 
 
+
             const nextIndex =
                 (
                     currentVideoIndex +
                     1
                 ) %
                 videoURLs.length;
+
 
 
             try {
@@ -4649,6 +5175,7 @@
                     "Video loop error:",
                     error
                 );
+
 
 
                 setTimeout(
@@ -4670,6 +5197,7 @@
         }
 
 
+
         // =========================================================
         // VIDEO ELEMENT
         // =========================================================
@@ -4684,28 +5212,35 @@
                 );
 
 
+
             video.src =
                 url;
+
 
 
             video.preload =
                 "auto";
 
 
+
             video.muted =
                 true;
+
 
 
             video.playsInline =
                 true;
 
 
+
             video.controls =
                 false;
 
 
+
             video.loop =
                 false;
+
 
 
             video.setAttribute(
@@ -4714,24 +5249,30 @@
             );
 
 
+
             video.style.position =
                 "fixed";
+
 
 
             video.style.width =
                 "1px";
 
 
+
             video.style.height =
                 "1px";
+
 
 
             video.style.opacity =
                 "0";
 
 
+
             video.style.pointerEvents =
                 "none";
+
 
 
             document.body.appendChild(
@@ -4739,9 +5280,11 @@
             );
 
 
+
             return video;
 
         }
+
 
 
         // =========================================================
@@ -4769,6 +5312,7 @@
                     }
 
 
+
                     const ready =
                         () => {
 
@@ -4777,6 +5321,7 @@
                             resolve();
 
                         };
+
 
 
                     const failed =
@@ -4793,12 +5338,14 @@
                         };
 
 
+
                     function cleanup() {
 
                         video.removeEventListener(
                             "canplay",
                             ready
                         );
+
 
 
                         video.removeEventListener(
@@ -4809,6 +5356,7 @@
                     }
 
 
+
                     video.addEventListener(
                         "canplay",
                         ready,
@@ -4817,6 +5365,7 @@
                                 true
                         }
                     );
+
 
 
                     video.addEventListener(
@@ -4834,6 +5383,7 @@
         }
 
 
+
         // =========================================================
         // VIDEO TEXTURE
         // =========================================================
@@ -4848,33 +5398,41 @@
                 );
 
 
+
             texture.colorSpace =
                 THREE.SRGBColorSpace;
+
 
 
             texture.minFilter =
                 THREE.LinearFilter;
 
 
+
             texture.magFilter =
                 THREE.LinearFilter;
+
 
 
             texture.generateMipmaps =
                 false;
 
 
+
             texture.wrapS =
                 THREE.ClampToEdgeWrapping;
+
 
 
             texture.wrapT =
                 THREE.ClampToEdgeWrapping;
 
 
+
             return texture;
 
         }
+
 
 
         // =========================================================
@@ -4896,9 +5454,11 @@
                 catch (_) { }
 
 
+
                 currentVideo.remove();
 
             }
+
 
 
             if (
@@ -4908,6 +5468,7 @@
                 currentVideoTexture.dispose();
 
             }
+
 
 
             for (
@@ -4927,26 +5488,32 @@
             }
 
 
+
             videoFiles =
                 [];
+
 
 
             videoURLs =
                 [];
 
 
+
             currentVideoIndex =
                 0;
+
 
 
             currentVideo =
                 null;
 
 
+
             currentVideoTexture =
                 null;
 
         }
+
 
 
         // =========================================================
@@ -4964,6 +5531,7 @@
             "https://raw.githubusercontent.com/yogeshcoodes/3d-visualizer/refs/heads/main/space.jpg";
 
 
+
         const possibleImages = [
 
             "space.jpg",
@@ -4975,6 +5543,7 @@
             "space.jfif"
 
         ];
+
 
 
         function loadTextureFromURL(
@@ -5000,11 +5569,13 @@
         }
 
 
+
         async function loadInitialSpaceImage() {
 
             showLoading(
                 "Loading space image..."
             );
+
 
 
             // -----------------------------------------------------
@@ -5019,9 +5590,11 @@
                     );
 
 
+
                 createSpaceSphere(
                     texture
                 );
+
 
 
                 hideLoading();
@@ -5030,9 +5603,11 @@
                     "none";
 
 
+
                 showToast(
                     "Space image loaded."
                 );
+
 
 
                 return true;
@@ -5049,6 +5624,7 @@
             }
 
 
+
             // -----------------------------------------------------
             // LOCAL FALLBACKS
             // -----------------------------------------------------
@@ -5059,36 +5635,17 @@
 
                 try {
 
-                    const response =
-                        await fetch(
-                            filename,
-                            {
-                                method:
-                                    "HEAD",
-                                cache:
-                                    "force-cache"
-                            }
-                        );
-
-
-                    if (
-                        !response.ok
-                    ) {
-
-                        continue;
-
-                    }
-
-
                     const texture =
                         await loadTextureFromURL(
                             filename
                         );
 
 
+
                     createSpaceSphere(
                         texture
                     );
+
 
 
                     hideLoading();
@@ -5097,9 +5654,11 @@
                         "none";
 
 
+
                     showToast(
                         `Loaded local ${filename}.`
                     );
+
 
 
                     return true;
@@ -5118,7 +5677,9 @@
             }
 
 
+
             hideLoading();
+
 
 
             showError(
@@ -5126,12 +5687,15 @@
             );
 
 
+
             return false;
 
         }
 
 
+
         loadInitialSpaceImage();
+
 
 
         // =========================================================
@@ -5161,6 +5725,7 @@
                 wakeUI();
 
 
+
                 if (
                     !currentTexture
                 ) {
@@ -5170,21 +5735,26 @@
                     );
 
 
+
                     return;
 
                 }
+
 
 
                 downloadBtn.disabled =
                     true;
 
 
+
                 downloadBtn.textContent =
                     "Creating GLB...";
 
 
+
                 let exportTexture =
                     null;
+
 
 
                 try {
@@ -5210,10 +5780,12 @@
                         }
 
 
+
                         const canvas =
                             document.createElement(
                                 "canvas"
                             );
+
 
 
                         canvas.width =
@@ -5221,15 +5793,18 @@
                             2048;
 
 
+
                         canvas.height =
                             currentVideo.videoHeight ||
                             1024;
+
 
 
                         const ctx =
                             canvas.getContext(
                                 "2d"
                             );
+
 
 
                         ctx.drawImage(
@@ -5241,26 +5816,32 @@
                         );
 
 
+
                         exportTexture =
                             new THREE.CanvasTexture(
                                 canvas
                             );
 
 
+
                         exportTexture.colorSpace =
                             THREE.SRGBColorSpace;
+
 
 
                         exportTexture.minFilter =
                             THREE.LinearFilter;
 
 
+
                         exportTexture.magFilter =
                             THREE.LinearFilter;
 
 
+
                         exportTexture.generateMipmaps =
                             false;
+
 
 
                         showToast(
@@ -5278,6 +5859,7 @@
                     }
 
 
+
                     // ---------------------------------------------------
                     // EXPORT SPHERE
                     // ---------------------------------------------------
@@ -5288,6 +5870,7 @@
                             256,
                             128
                         );
+
 
 
                     const material =
@@ -5305,6 +5888,7 @@
                         });
 
 
+
                     const mesh =
                         new THREE.Mesh(
                             geometry,
@@ -5312,8 +5896,10 @@
                         );
 
 
+
                     mesh.name =
                         "Space_3D_Sphere";
+
 
 
                     mesh.rotation.x =
@@ -5322,14 +5908,17 @@
                         );
 
 
+
                     mesh.rotation.y =
                         THREE.MathUtils.degToRad(
                             imageRotationY
                         );
 
 
+
                     const exportScene =
                         new THREE.Scene();
+
 
 
                     exportScene.add(
@@ -5337,8 +5926,10 @@
                     );
 
 
+
                     const exporter =
                         new GLTFExporter();
+
 
 
                     const result =
@@ -5378,6 +5969,7 @@
                         );
 
 
+
                     const blob =
                         new Blob(
                             [result],
@@ -5388,10 +5980,12 @@
                         );
 
 
+
                     const url =
                         URL.createObjectURL(
                             blob
                         );
+
 
 
                     const link =
@@ -5400,8 +5994,10 @@
                         );
 
 
+
                     link.href =
                         url;
+
 
 
                     link.download =
@@ -5413,15 +6009,19 @@
                             : "space-sphere.glb";
 
 
+
                     document.body.appendChild(
                         link
                     );
 
 
+
                     link.click();
 
 
+
                     link.remove();
+
 
 
                     setTimeout(
@@ -5436,9 +6036,11 @@
                     );
 
 
+
                     geometry.dispose();
 
                     material.dispose();
+
 
 
                     if (
@@ -5451,8 +6053,10 @@
                     }
 
 
+
                     downloadBtn.textContent =
                         "GLB Downloaded ✓";
+
 
 
                     setTimeout(
@@ -5464,6 +6068,7 @@
                         },
                         2200
                     );
+
 
 
                     showToast(
@@ -5484,11 +6089,13 @@
                     );
 
 
+
                     showToast(
                         "GLB export failed: " +
                         error.message,
                         5000
                     );
+
 
 
                     downloadBtn.textContent =
@@ -5507,6 +6114,7 @@
         );
 
 
+
         // =========================================================
         // RESIZE
         // =========================================================
@@ -5520,7 +6128,9 @@
                     window.innerHeight;
 
 
+
                 camera.updateProjectionMatrix();
+
 
 
                 renderer.setPixelRatio(
@@ -5531,10 +6141,12 @@
                 );
 
 
+
                 renderer.setSize(
                     window.innerWidth,
                     window.innerHeight
                 );
+
 
 
                 viewportAspect =
@@ -5542,14 +6154,17 @@
                     window.innerHeight;
 
 
+
                 viewportHeight =
                     window.innerHeight;
+
 
 
                 updateAllFrameStretchMaterials();
 
             }
         );
+
 
 
         // =========================================================
@@ -5568,10 +6183,12 @@
         }
 
 
+
         window.addEventListener(
             "orientationchange",
             updateScreenOrientation
         );
+
 
 
         // =========================================================
@@ -5581,7 +6198,9 @@
         updateFrameStretch();
 
 
+
         updateViewMode();
+
 
 
         // =========================================================
@@ -5593,6 +6212,7 @@
             requestAnimationFrame(
                 animate
             );
+
 
 
             /*
@@ -5611,12 +6231,14 @@
             }
 
 
+
             renderer.render(
                 scene,
                 camera
             );
 
         }
+
 
 
         animate();

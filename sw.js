@@ -1,5 +1,5 @@
 const CACHE_NAME =
-    "space-sphere-v5";
+    "space-sphere-v6";
 
 
 const APP_SHELL = [
