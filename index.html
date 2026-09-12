@@ -98,9 +98,11 @@
             overscroll-behavior: none;
         }
 
+
         #viewer.dragging {
             cursor: none;
         }
+
 
         #viewer canvas {
 
@@ -112,7 +114,7 @@
 
 
         /* =====================================================
-       VIEW STATUS
+       STATUS
        ===================================================== */
 
         #viewStatus {
@@ -266,8 +268,10 @@
                 opacity .22s ease;
         }
 
+
         #loading.hidden {
-            opacity: 0;
+            opacity:
+                0;
         }
 
 
@@ -312,6 +316,7 @@
             z-index:
                 300;
         }
+
 
         #error code {
 
@@ -384,6 +389,7 @@
                 transform .2s ease;
         }
 
+
         #toast.show {
 
             opacity:
@@ -395,7 +401,7 @@
 
 
         /* =====================================================
-       FULLSCREEN BUTTON
+       FULLSCREEN CORNER BUTTON
        ===================================================== */
 
         #fullscreenCornerBtn {
@@ -457,15 +463,6 @@
             line-height:
                 1;
 
-            box-shadow:
-                0 5px 18px rgba(0, 0, 0, .25);
-
-            backdrop-filter:
-                blur(8px);
-
-            -webkit-backdrop-filter:
-                blur(8px);
-
             opacity:
                 .5;
 
@@ -475,13 +472,19 @@
             pointer-events:
                 auto;
 
+            backdrop-filter:
+                blur(8px);
+
+            -webkit-backdrop-filter:
+                blur(8px);
+
             transition:
                 opacity .15s ease,
                 transform .15s ease;
         }
 
-        #fullscreenCornerBtn:hover {
 
+        #fullscreenCornerBtn:hover {
             opacity:
                 .7;
 
@@ -489,8 +492,8 @@
                 scale(1.04);
         }
 
-        #fullscreenCornerBtn:active {
 
+        #fullscreenCornerBtn:active {
             transform:
                 scale(.96);
         }
@@ -544,8 +547,8 @@
                 opacity .35s ease;
         }
 
-        .ui.idle {
 
+        .ui.idle {
             opacity:
                 .40;
         }
@@ -553,7 +556,6 @@
 
         .ui:hover,
         .ui:focus-within {
-
             opacity:
                 1;
         }
@@ -807,27 +809,6 @@
 
 
         /* =====================================================
-       DISTANCE ONLY
-       ===================================================== */
-
-        #distanceOnly {
-            display:
-                flex;
-        }
-
-
-        /* =====================================================
-       HIDDEN INPUTS
-       ===================================================== */
-
-        #imageInput,
-        #videoInput {
-            display:
-                none;
-        }
-
-
-        /* =====================================================
        FULLSCREEN MODE
        ===================================================== */
 
@@ -846,17 +827,10 @@
         }
 
 
-        /*
-      When fullscreen is active:
-
-      - bottom controls disappear
-      - status labels disappear
-      - only the semi-transparent corner
-        fullscreen button remains
-    */
-
         #app.fullscreen-active #viewStatus,
+
         #app.fullscreen-active #sensorStatus,
+
         #app.fullscreen-active .ui {
 
             display:
@@ -875,7 +849,7 @@
        MOBILE
        ===================================================== */
 
-        @media (max-width: 600px) {
+        @media (max-width:600px) {
 
             .ui {
 
@@ -884,6 +858,7 @@
 
                 gap:
                     5px;
+
             }
 
 
@@ -988,7 +963,7 @@
        SMALL PHONES
        ===================================================== */
 
-        @media (max-width: 380px) {
+        @media (max-width:380px) {
 
             button {
 
@@ -1065,7 +1040,6 @@
 
         <!-- ===================================================
        FULLSCREEN CORNER BUTTON
-       ONLY VISIBLE IN FULLSCREEN
        =================================================== -->
 
         <button id="fullscreenCornerBtn" aria-label="Exit Fullscreen" title="Exit Fullscreen">
@@ -1074,7 +1048,7 @@
 
 
         <!-- ===================================================
-       UI
+       BOTTOM UI
        =================================================== -->
 
         <div class="ui" id="ui">
@@ -1092,7 +1066,9 @@
             <div id="controlsPanel">
 
 
-                <!-- SPACE DISTANCE -->
+                <!-- =================================================
+           SPACE DISTANCE — INSIDE ONLY
+           ================================================= -->
 
                 <div id="distanceOnly" class="slider-row">
 
@@ -1111,7 +1087,30 @@
                 </div>
 
 
-                <!-- IMAGE X -->
+                <!-- =================================================
+           FRAME STRETCH — INSIDE ONLY
+           ================================================= -->
+
+                <div id="frameStretchOnly" class="slider-row">
+
+                    <div class="slider-label">
+                        Frame Stretch
+                    </div>
+
+
+                    <input id="frameStretchSlider" class="slider" type="range" min="0" max="100" value="100" step="1">
+
+
+                    <div id="frameStretchValue" class="slider-value">
+                        100%
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+           IMAGE X — BOTH VIEWS
+           ================================================= -->
 
                 <div class="slider-row">
 
@@ -1130,7 +1129,9 @@
                 </div>
 
 
-                <!-- IMAGE Y -->
+                <!-- =================================================
+           IMAGE Y — BOTH VIEWS
+           ================================================= -->
 
                 <div class="slider-row">
 
@@ -1153,7 +1154,7 @@
 
 
             <!-- =================================================
-         VIEW / SENSOR / FULLSCREEN
+         VIEW / MOTION / FULLSCREEN
          ================================================= -->
 
             <div class="control-row">
@@ -1371,6 +1372,12 @@
             );
 
 
+        const frameStretchOnly =
+            document.getElementById(
+                "frameStretchOnly"
+            );
+
+
         const distanceSlider =
             document.getElementById(
                 "distanceSlider"
@@ -1380,6 +1387,18 @@
         const distanceValue =
             document.getElementById(
                 "distanceValue"
+            );
+
+
+        const frameStretchSlider =
+            document.getElementById(
+                "frameStretchSlider"
+            );
+
+
+        const frameStretchValue =
+            document.getElementById(
+                "frameStretchValue"
             );
 
 
@@ -1408,7 +1427,7 @@
 
 
         // =========================================================
-        // THREE.JS
+        // THREE
         // =========================================================
 
         const scene =
@@ -1418,9 +1437,12 @@
         const camera =
             new THREE.PerspectiveCamera(
                 60,
+
                 window.innerWidth /
                 window.innerHeight,
+
                 0.01,
+
                 10000
             );
 
@@ -1481,6 +1503,15 @@
         );
 
 
+        // Texture loader used by local and remote image loading.
+        const textureLoader =
+            new THREE.TextureLoader();
+
+        textureLoader.setCrossOrigin(
+            "anonymous"
+        );
+
+
         // =========================================================
         // STATE
         // =========================================================
@@ -1517,8 +1548,24 @@
             0;
 
 
+        let frameStretch =
+            100;
+
+        let sourceAspect =
+            2.0;
+
+
+        let viewportAspect =
+            window.innerWidth /
+            window.innerHeight;
+
+
+        let viewportHeight =
+            window.innerHeight;
+
+
         // =========================================================
-        // CAMERA
+        // MANUAL CAMERA
         // =========================================================
 
         let yaw =
@@ -1680,14 +1727,6 @@
 
 
         // =========================================================
-        // TEXTURE LOADER
-        // =========================================================
-
-        const textureLoader =
-            new THREE.TextureLoader();
-
-
-        // =========================================================
         // LOADING
         // =========================================================
 
@@ -1789,6 +1828,24 @@
                     },
                     duration
                 );
+
+        }
+
+
+        // =========================================================
+        // ERROR
+        // =========================================================
+
+        function showError(
+            message
+        ) {
+
+            errorBox.innerHTML =
+                message;
+
+
+            errorBox.style.display =
+                "block";
 
         }
 
@@ -1910,17 +1967,14 @@
             }
 
 
-            const a =
-                touches[0];
-
-
-            const b =
-                touches[1];
-
-
             return Math.hypot(
-                b.x - a.x,
-                b.y - a.y
+
+                touches[1].x -
+                touches[0].x,
+
+                touches[1].y -
+                touches[0].y
+
             );
 
         }
@@ -1937,13 +1991,9 @@
                 wakeUI();
 
 
-                /*
-                  Desktop:
-                  only LEFT button.
-                */
-
                 if (
-                    event.pointerType === "mouse" &&
+                    event.pointerType ===
+                    "mouse" &&
                     event.button !== 0
                 ) {
 
@@ -1975,7 +2025,8 @@
                 // -----------------------------------------------------
 
                 if (
-                    event.pointerType === "touch"
+                    event.pointerType ===
+                    "touch"
                 ) {
 
                     try {
@@ -1985,17 +2036,13 @@
                         );
 
                     }
+
                     catch (_) { }
 
 
                     const touches =
                         getTouchPointers();
 
-
-                    /*
-                      Outside ONLY:
-                      two fingers = pinch.
-                    */
 
                     if (
                         touches.length >= 2 &&
@@ -2082,6 +2129,7 @@
                     }
 
                 }
+
                 catch (_) { }
 
             }
@@ -2123,11 +2171,12 @@
 
 
                 // -----------------------------------------------------
-                // PINCH
+                // OUTSIDE PINCH
                 // -----------------------------------------------------
 
                 if (
-                    event.pointerType === "touch" &&
+                    event.pointerType ===
+                    "touch" &&
                     isPinching &&
                     !insideView
                 ) {
@@ -2147,10 +2196,14 @@
 
                         outsideZoom =
                             THREE.MathUtils.clamp(
+
                                 pinchStartZoom /
                                 ratio,
+
                                 0.45,
+
                                 2.8
+
                             );
 
 
@@ -2163,10 +2216,6 @@
 
                 }
 
-
-                // -----------------------------------------------------
-                // NORMAL DRAG
-                // -----------------------------------------------------
 
                 if (
                     !isDragging
@@ -2225,11 +2274,6 @@
                     insideView
                 ) {
 
-                    /*
-                      INSIDE:
-                      normal vertical direction.
-                    */
-
                     yaw -=
                         dx *
                         mouseSensitivity;
@@ -2254,15 +2298,14 @@
 
                 else {
 
-                    /*
-                      OUTSIDE:
-                      vertical reversed.
-                    */
-
                     orbitYaw -=
                         dx *
                         mouseSensitivity;
 
+
+                    /*
+                      OUTSIDE vertical reversed.
+                    */
 
                     orbitPitch +=
                         dy *
@@ -2277,6 +2320,7 @@
                     orbitPitch =
                         Math.max(
                             -limit,
+
                             Math.min(
                                 limit,
                                 orbitPitch
@@ -2309,7 +2353,8 @@
 
 
                 if (
-                    event.pointerType === "touch"
+                    event.pointerType ===
+                    "touch"
                 ) {
 
                     const touches =
@@ -2333,6 +2378,7 @@
                         isDragging =
                             false;
 
+
                         activeMousePointer =
                             null;
 
@@ -2349,10 +2395,6 @@
             }
         );
 
-
-        // =========================================================
-        // POINTER CANCEL
-        // =========================================================
 
         viewer.addEventListener(
             "pointercancel",
@@ -2378,10 +2420,6 @@
         );
 
 
-        // =========================================================
-        // MOUSE UP
-        // =========================================================
-
         window.addEventListener(
             "mouseup",
             event => {
@@ -2398,10 +2436,6 @@
         );
 
 
-        // =========================================================
-        // BLUR
-        // =========================================================
-
         window.addEventListener(
             "blur",
             () => {
@@ -2413,10 +2447,6 @@
             }
         );
 
-
-        // =========================================================
-        // STOP DRAGGING
-        // =========================================================
 
         function stopDragging() {
 
@@ -2447,11 +2477,41 @@
                     document.exitPointerLock();
 
                 }
+
                 catch (_) { }
 
             }
 
         }
+
+
+        document.addEventListener(
+            "pointerlockchange",
+            () => {
+
+                if (
+                    document.pointerLockElement !==
+                    viewer
+                ) {
+
+                    viewer.classList.remove(
+                        "dragging"
+                    );
+
+                }
+
+            }
+        );
+
+
+        viewer.addEventListener(
+            "contextmenu",
+            event => {
+
+                event.preventDefault();
+
+            }
+        );
 
 
         // =========================================================
@@ -2550,7 +2610,7 @@
 
 
             /*
-              Sphere remains exactly centered.
+              Always aim at the real sphere center.
             */
 
             camera.lookAt(
@@ -2563,7 +2623,7 @@
 
 
         // =========================================================
-        // SCREEN ORIENTATION
+        // SENSOR
         // =========================================================
 
         function updateScreenOrientation() {
@@ -2602,10 +2662,6 @@
 
         }
 
-
-        // =========================================================
-        // DEVICE ORIENTATION
-        // =========================================================
 
         function handleDeviceOrientation(
             event
@@ -2695,10 +2751,6 @@
             );
 
 
-            /*
-              Calibrate first valid reading.
-            */
-
             if (
                 !sensorInitialized
             ) {
@@ -2760,10 +2812,6 @@
                     );
 
 
-            /*
-              Smooth to prevent orientation flashing.
-            */
-
             if (
                 !hasSmoothedSensor
             ) {
@@ -2777,6 +2825,7 @@
                     true;
 
             }
+
             else {
 
                 smoothedSensorQuaternion.slerp(
@@ -2795,7 +2844,7 @@
 
 
         // =========================================================
-        // MOTION BUTTON
+        // SENSOR BUTTON
         // =========================================================
 
         sensorBtn.addEventListener(
@@ -2818,10 +2867,6 @@
 
                 }
 
-
-                /*
-                  iOS/iPadOS permission.
-                */
 
                 if (
                     typeof DeviceOrientationEvent
@@ -2851,6 +2896,7 @@
                         }
 
                     }
+
                     catch (error) {
 
                         console.error(
@@ -2932,44 +2978,7 @@
 
 
         // =========================================================
-        // SENSOR LISTENER
-        // =========================================================
-
-        if (
-            sensorAvailable
-        ) {
-
-            /*
-              One sensor event stream only.
-            */
-
-            window.addEventListener(
-                "deviceorientation",
-                handleDeviceOrientation,
-                true
-            );
-
-
-            updateScreenOrientation();
-
-        }
-        else {
-
-            sensorBtn.disabled =
-                true;
-
-
-            sensorBtn.textContent =
-                "Motion Unavailable";
-
-        }
-
-
-        // =========================================================
-        // IMAGE ROTATION
-        // =========================================================
-        //
-        // X/Y work in BOTH inside AND outside.
+        // ROTATION
         // =========================================================
 
         function applyImageRotation() {
@@ -3016,10 +3025,6 @@
         }
 
 
-        // =========================================================
-        // X SLIDER
-        // =========================================================
-
         rotationXSlider.addEventListener(
             "input",
             () => {
@@ -3042,10 +3047,6 @@
             }
         );
 
-
-        // =========================================================
-        // Y SLIDER
-        // =========================================================
 
         rotationYSlider.addEventListener(
             "input",
@@ -3071,7 +3072,643 @@
 
 
         // =========================================================
-        // SPACE DISTANCE
+        // FRAME STRETCH
+        // =========================================================
+        //
+        // 100%:
+        //   Current full stretched frame.
+        //
+        // 0%:
+        //   Original aspect ratio.
+        //
+        // Between:
+        //   Smooth transition.
+        //
+        // The sphere DOES NOT disappear or become a plane.
+        // The texture stays on the spherical geometry.
+        // The shader simply adds black around the original frame.
+        // =========================================================
+
+        function updateFrameStretch() {
+
+            frameStretch =
+                Number(
+                    frameStretchSlider.value
+                );
+
+
+            frameStretchValue.textContent =
+                `${frameStretch}%`;
+
+
+            updateAllFrameStretchMaterials();
+
+        }
+
+
+        frameStretchSlider.addEventListener(
+            "input",
+            () => {
+
+                updateFrameStretch();
+
+                wakeUI();
+
+            }
+        );
+
+
+        // =========================================================
+        // FRAME STRETCH SHADER
+        // =========================================================
+        //
+        // We use a shader rather than texture.repeat because
+        // ClampToEdge would stretch the edge pixels into the
+        // black area.
+        //
+        // Shader gives genuine BLACK outside the image frame.
+        // =========================================================
+
+        function setupFrameStretchShader(
+            material
+        ) {
+
+            material.onBeforeCompile =
+                shader => {
+
+                    shader.uniforms.frameStretch =
+                    {
+                        value:
+                            frameStretch / 100
+                    };
+
+
+                    shader.uniforms.sourceAspect =
+                    {
+                        value:
+                            sourceAspect
+                    };
+
+
+                    shader.uniforms.viewportAspect =
+                    {
+                        value:
+                            viewportAspect
+                    };
+
+
+                    shader.uniforms.viewportHeight =
+                    {
+                        value:
+                            viewportHeight
+                    };
+
+
+                    shader.uniforms.flatFrame =
+                    {
+                        value:
+                            insideView ? 1 : 0
+                    };
+
+
+                    material.userData.frameShader =
+                        shader;
+
+
+                    /*
+                      Fragment shader:
+              
+                      0% = preserve source aspect ratio
+                      100% = full stretched frame
+                    */
+
+                    shader.fragmentShader =
+                        `uniform float frameStretch;
+          uniform float sourceAspect;
+          uniform float viewportAspect;
+          uniform float viewportHeight;
+          uniform float flatFrame;
+
+          ${shader.fragmentShader}`.replace(
+
+                            "#include <map_fragment>",
+
+                            `
+          #if defined( USE_MAP )
+
+            float stretch =
+              clamp(
+                frameStretch,
+                0.0,
+                1.0
+              );
+
+            float targetAspect =
+                            sourceAspect /
+                            viewportAspect;
+
+            /*
+              Current renderer UV area is treated as
+              the full stretched frame.
+
+              We calculate a scale that moves gradually
+              from contain-style framing at 0% to full
+              coverage at 100%.
+            */
+
+            float containScaleX = 1.0;
+            float containScaleY = 1.0;
+
+            /*
+              Because the supplied panorama is normally
+              2:1, preserve that frame in UV-space.
+            */
+
+            if (
+                            targetAspect > 1.0
+            ) {
+
+                            containScaleY =
+                                1.0 /
+                                targetAspect;
+
+            }
+
+            else {
+
+              containScaleX =
+                targetAspect;
+
+            }
+
+
+                        float originalFrameScale =
+                            0.50;
+
+
+                        containScaleX *=
+                            originalFrameScale;
+
+
+                        containScaleY *=
+                            originalFrameScale;
+
+
+            float scaleX =
+              mix(
+                containScaleX,
+                1.0,
+                stretch
+              );
+
+            float scaleY =
+              mix(
+                containScaleY,
+                1.0,
+                stretch
+              );
+
+
+                        vec2 centeredUV =
+                            ( vMapUv - 0.5 );
+
+
+                        vec2 scaledUV =
+                            centeredUV /
+                            vec2(
+                                scaleX,
+                                scaleY
+                            ) +
+                            0.5;
+
+
+            bool insideFrame =
+              scaledUV.x >= 0.0 &&
+              scaledUV.x <= 1.0 &&
+              scaledUV.y >= 0.0 &&
+              scaledUV.y <= 1.0;
+
+
+            if (
+              !insideFrame
+            ) {
+
+                            discard;
+
+            }
+
+            else {
+
+              vec4 sampledDiffuseColor =
+                                    texture2D(
+                                        map,
+                                        scaledUV
+                                    );
+
+
+              diffuseColor *=
+                sampledDiffuseColor;
+
+            }
+
+          #endif
+          `
+
+                        );
+
+                };
+
+
+            material.needsUpdate =
+                true;
+
+        }
+
+
+        // =========================================================
+        // UPDATE SHADER UNIFORMS
+        // =========================================================
+
+        function updateFrameStretchMaterial(
+            material
+        ) {
+
+            if (
+                !material
+            ) {
+
+                return;
+
+            }
+
+
+            const shader =
+                material.userData.frameShader;
+
+
+            if (
+                !shader
+            ) {
+
+                setupFrameStretchShader(
+                    material
+                );
+
+
+                return;
+
+            }
+
+
+            if (
+                shader.uniforms.frameStretch
+            ) {
+
+                shader.uniforms.frameStretch.value =
+                    frameStretch / 100;
+
+            }
+
+            if (
+                shader.uniforms.sourceAspect
+            ) {
+
+                shader.uniforms.sourceAspect.value =
+                    sourceAspect;
+
+            }
+
+            if (
+                shader.uniforms.viewportAspect
+            ) {
+
+                shader.uniforms.viewportAspect.value =
+                    viewportAspect;
+
+            }
+
+            if (
+                shader.uniforms.viewportHeight
+            ) {
+
+                shader.uniforms.viewportHeight.value =
+                    viewportHeight;
+
+            }
+
+            if (
+                shader.uniforms.flatFrame
+            ) {
+
+                shader.uniforms.flatFrame.value =
+                    insideView ? 1 : 0;
+
+            }
+
+        }
+
+
+        // =========================================================
+        // ALL FRAME STRETCH MATERIALS
+        // =========================================================
+
+        function updateAllFrameStretchMaterials() {
+
+            if (
+                insideSphere
+            ) {
+
+                updateFrameStretchMaterial(
+                    insideSphere.material
+                );
+
+            }
+
+
+            if (
+                outsideSphere
+            ) {
+
+                updateFrameStretchMaterial(
+                    outsideSphere.material
+                );
+
+            }
+
+        }
+
+
+        // =========================================================
+        // CREATE SPHERES
+        // =========================================================
+
+        function createSpaceSphere(
+            texture
+        ) {
+
+            if (
+                !texture
+            ) {
+
+                return;
+
+            }
+
+
+            // -------------------------------------------------------
+            // OLD INSIDE
+            // -------------------------------------------------------
+
+            if (
+                insideSphere
+            ) {
+
+                scene.remove(
+                    insideSphere
+                );
+
+
+                insideSphere.geometry.dispose();
+
+                insideSphere.material.dispose();
+
+
+                insideSphere =
+                    null;
+
+            }
+
+
+            // -------------------------------------------------------
+            // OLD OUTSIDE
+            // -------------------------------------------------------
+
+            if (
+                outsideSphere
+            ) {
+
+                scene.remove(
+                    outsideSphere
+                );
+
+
+                outsideSphere.geometry.dispose();
+
+                outsideSphere.material.dispose();
+
+
+                outsideSphere =
+                    null;
+
+            }
+
+
+            // -------------------------------------------------------
+            // TEXTURE
+            // -------------------------------------------------------
+
+            texture.colorSpace =
+                THREE.SRGBColorSpace;
+
+
+            texture.wrapS =
+                THREE.ClampToEdgeWrapping;
+
+
+            texture.wrapT =
+                THREE.ClampToEdgeWrapping;
+
+
+            texture.minFilter =
+                THREE.LinearFilter;
+
+
+            texture.magFilter =
+                THREE.LinearFilter;
+
+
+            texture.generateMipmaps =
+                false;
+
+
+            texture.needsUpdate =
+                true;
+
+
+            const mediaImage =
+                texture.image;
+
+            if (
+                mediaImage &&
+                Number(mediaImage.width) > 0 &&
+                Number(mediaImage.height) > 0
+            ) {
+
+                sourceAspect =
+                    mediaImage.width /
+                    mediaImage.height;
+
+            }
+
+            else {
+
+                sourceAspect =
+                    2.0;
+
+            }
+
+
+            currentTexture =
+                texture;
+
+
+            // =======================================================
+            // INSIDE
+            // =======================================================
+
+            const insideGeometry =
+                new THREE.SphereGeometry(
+                    1,
+                    192,
+                    96
+                );
+
+
+            insideGeometry.scale(
+                -1,
+                1,
+                1
+            );
+
+
+            const insideMaterial =
+                new THREE.MeshBasicMaterial({
+
+                    map:
+                        texture,
+
+                    side:
+                        THREE.FrontSide,
+
+                    toneMapped:
+                        false
+
+                });
+
+
+            insideSphere =
+                new THREE.Mesh(
+                    insideGeometry,
+                    insideMaterial
+                );
+
+
+            insideSphere.name =
+                "Space_Inside_Sphere";
+
+
+            insideSphere.position.set(
+                0,
+                0,
+                0
+            );
+
+
+            insideSphere.scale.setScalar(
+                currentRadius
+            );
+
+
+            scene.add(
+                insideSphere
+            );
+
+
+            // =======================================================
+            // OUTSIDE
+            // =======================================================
+
+            const outsideGeometry =
+                new THREE.SphereGeometry(
+                    1,
+                    256,
+                    128
+                );
+
+
+            const outsideMaterial =
+                new THREE.MeshBasicMaterial({
+
+                    map:
+                        texture,
+
+                    side:
+                        THREE.FrontSide,
+
+                    toneMapped:
+                        false
+
+                });
+
+
+            outsideSphere =
+                new THREE.Mesh(
+                    outsideGeometry,
+                    outsideMaterial
+                );
+
+
+            outsideSphere.name =
+                "Space_3D_Outside_Sphere";
+
+
+            outsideSphere.position.set(
+                0,
+                0,
+                0
+            );
+
+
+            outsideSphere.scale.setScalar(
+                currentRadius
+            );
+
+
+            scene.add(
+                outsideSphere
+            );
+
+
+            /*
+              Install frame-stretch shader on both meshes.
+          
+              The effect is only visually meaningful in Inside View,
+              as requested.
+            */
+
+            setupFrameStretchShader(
+                insideMaterial
+            );
+
+
+            setupFrameStretchShader(
+                outsideMaterial
+            );
+
+
+            applyImageRotation();
+
+
+            updateFrameStretch();
+
+
+            updateViewMode();
+
+        }
+
+
+        // =========================================================
+        // DISTANCE
         // =========================================================
         //
         // ONLY INSIDE.
@@ -3103,9 +3740,7 @@
 
 
             /*
-              Noticeable optical effect:
-              low = close / large
-              high = far / small
+              Visual distance effect.
             */
 
             camera.fov =
@@ -3120,7 +3755,7 @@
 
 
             /*
-              Physical sphere radius.
+              Actual spherical environment scale.
             */
 
             currentRadius =
@@ -3193,14 +3828,6 @@
                     1;
 
 
-                hasSmoothedSensor =
-                    false;
-
-
-                sensorInitialized =
-                    false;
-
-
                 updateViewMode();
 
             }
@@ -3240,14 +3867,22 @@
 
 
                 /*
-                  Distance visible only inside.
+                  Distance + Frame Stretch are visible INSIDE.
                 */
 
                 distanceOnly.style.display =
                     "flex";
 
 
+                frameStretchOnly.style.display =
+                    "flex";
+
+
                 distanceSlider.disabled =
+                    false;
+
+
+                frameStretchSlider.disabled =
                     false;
 
 
@@ -3256,6 +3891,9 @@
 
 
                 updateInsideDistance();
+
+
+                updateFrameStretch();
 
 
                 viewStatus.textContent =
@@ -3274,6 +3912,7 @@
                     applySensorCamera();
 
                 }
+
                 else {
 
                     applyInsideCamera();
@@ -3297,18 +3936,31 @@
 
 
                 /*
-                  Distance is hidden.
+                  ONLY these two controls disappear:
             
-                  X/Y remain.
+                  Space Distance
+                  Frame Stretch
                 */
 
                 distanceOnly.style.display =
                     "none";
 
 
+                frameStretchOnly.style.display =
+                    "none";
+
+
                 distanceSlider.disabled =
                     true;
 
+
+                frameStretchSlider.disabled =
+                    true;
+
+
+                /*
+                  X/Y remain visible.
+                */
 
                 controlsPanel.style.display =
                     "block";
@@ -3336,36 +3988,23 @@
 
             applyImageRotation();
 
+
+            updateAllFrameStretchMaterials();
+
         }
 
 
         // =========================================================
         // FULLSCREEN
         // =========================================================
-        //
-        // On entry:
-        //
-        //   bottom UI disappears
-        //   status disappears
-        //   only top-right 50% button remains
-        //
-        // On exit:
-        //
-        //   normal UI returns
-        //
-        // =========================================================
 
         async function enterFullscreen() {
 
             try {
 
-                /*
-                  navigationUI:"hide" asks supported browsers to
-                  hide browser navigation UI as much as possible.
-                */
-
                 if (
-                    document.documentElement.requestFullscreen
+                    document.documentElement
+                        .requestFullscreen
                 ) {
 
                     try {
@@ -3379,11 +4018,6 @@
                     }
 
                     catch (_) {
-
-                        /*
-                          Fallback for browsers that don't support
-                          the navigationUI option.
-                        */
 
                         await document.documentElement
                             .requestFullscreen();
@@ -3404,11 +4038,6 @@
                 }
 
 
-                /*
-                  Ask mobile browsers to keep the experience
-                  in the current orientation when possible.
-                */
-
                 if (
                     screen.orientation &&
                     screen.orientation.lock
@@ -3421,6 +4050,7 @@
                         );
 
                     }
+
                     catch (_) { }
 
                 }
@@ -3443,10 +4073,6 @@
 
         }
 
-
-        // =========================================================
-        // EXIT FULLSCREEN
-        // =========================================================
 
         async function exitFullscreen() {
 
@@ -3474,10 +4100,6 @@
         }
 
 
-        // =========================================================
-        // FULLSCREEN BUTTON
-        // =========================================================
-
         fullscreenBtn.addEventListener(
             "click",
             async () => {
@@ -3503,15 +4125,6 @@
         );
 
 
-        // =========================================================
-        // CORNER FULLSCREEN BUTTON
-        // =========================================================
-        //
-        // This button exists ONLY inside fullscreen mode.
-        //
-        // It is ~50% transparent.
-        // =========================================================
-
         fullscreenCornerBtn.addEventListener(
             "click",
             async event => {
@@ -3526,10 +4139,6 @@
             }
         );
 
-
-        // =========================================================
-        // FULLSCREEN CHANGE
-        // =========================================================
 
         document.addEventListener(
             "fullscreenchange",
@@ -3556,37 +4165,12 @@
                     );
 
 
-                    /*
-                      Corner button is the only visible control.
-                    */
-
                     fullscreenCornerBtn.style.display =
                         "flex";
 
 
-                    fullscreenCornerBtn.textContent =
-                        "⛶";
-
-
-                    fullscreenCornerBtn.setAttribute(
-                        "aria-label",
-                        "Exit Fullscreen"
-                    );
-
-
-                    fullscreenCornerBtn.setAttribute(
-                        "title",
-                        "Exit Fullscreen"
-                    );
-
-
-                    /*
-                      Hide bottom controls immediately.
-                    */
-
-                    ui.classList.remove(
-                        "idle"
-                    );
+                    fullscreenBtn.textContent =
+                        "Exit Fullscreen";
 
                 }
 
@@ -3927,6 +4511,7 @@
                     currentVideo.pause();
 
                 }
+
                 catch (_) { }
 
 
@@ -4061,7 +4646,7 @@
             catch (error) {
 
                 console.error(
-                    "Video loop:",
+                    "Video loop error:",
                     error
                 );
 
@@ -4280,7 +4865,7 @@
 
 
             texture.wrapS =
-                THREE.RepeatWrapping;
+                THREE.ClampToEdgeWrapping;
 
 
             texture.wrapT =
@@ -4307,6 +4892,7 @@
                     currentVideo.pause();
 
                 }
+
                 catch (_) { }
 
 
@@ -4335,6 +4921,7 @@
                     );
 
                 }
+
                 catch (_) { }
 
             }
@@ -4363,8 +4950,19 @@
 
 
         // =========================================================
-        // AUTO LOCAL IMAGE
+        // MAIN IMAGE + LOCAL FALLBACK
         // =========================================================
+        //
+        // Main/default image:
+        // GitHub raw space.jpg
+        //
+        // Fallback:
+        // Try the common space.* files in the same folder.
+        // =========================================================
+
+        const MAIN_SPACE_IMAGE =
+            "https://raw.githubusercontent.com/yogeshcoodes/3d-visualizer/refs/heads/main/space.jpg";
+
 
         const possibleImages = [
 
@@ -4379,11 +4977,84 @@
         ];
 
 
-        async function findLocalSpaceImage() {
+        function loadTextureFromURL(
+            url
+        ) {
+
+            return new Promise(
+                (
+                    resolve,
+                    reject
+                ) => {
+
+                    textureLoader.load(
+                        url,
+                        resolve,
+                        undefined,
+                        reject
+                    );
+
+                }
+            );
+
+        }
+
+
+        async function loadInitialSpaceImage() {
+
+            showLoading(
+                "Loading space image..."
+            );
+
+
+            // -----------------------------------------------------
+            // MAIN REMOTE IMAGE
+            // -----------------------------------------------------
+
+            try {
+
+                const texture =
+                    await loadTextureFromURL(
+                        MAIN_SPACE_IMAGE
+                    );
+
+
+                createSpaceSphere(
+                    texture
+                );
+
+
+                hideLoading();
+
+                errorBox.style.display =
+                    "none";
+
+
+                showToast(
+                    "Space image loaded."
+                );
+
+
+                return true;
+
+            }
+
+            catch (error) {
+
+                console.warn(
+                    "Main space image failed:",
+                    error
+                );
+
+            }
+
+
+            // -----------------------------------------------------
+            // LOCAL FALLBACKS
+            // -----------------------------------------------------
 
             for (
-                const filename of
-                possibleImages
+                const filename of possibleImages
             ) {
 
                 try {
@@ -4394,7 +5065,6 @@
                             {
                                 method:
                                     "HEAD",
-
                                 cache:
                                     "force-cache"
                             }
@@ -4411,20 +5081,8 @@
 
 
                     const texture =
-                        await new Promise(
-                            (
-                                resolve,
-                                reject
-                            ) => {
-
-                                textureLoader.load(
-                                    filename,
-                                    resolve,
-                                    undefined,
-                                    reject
-                                );
-
-                            }
+                        await loadTextureFromURL(
+                            filename
                         );
 
 
@@ -4433,17 +5091,39 @@
                     );
 
 
+                    hideLoading();
+
+                    errorBox.style.display =
+                        "none";
+
+
+                    showToast(
+                        `Loaded local ${filename}.`
+                    );
+
+
                     return true;
 
                 }
 
-                catch (_) {
+                catch (error) {
 
-                    // Try next.
+                    console.warn(
+                        `Local fallback failed: ${filename}`,
+                        error
+                    );
 
                 }
 
             }
+
+
+            hideLoading();
+
+
+            showError(
+                "Could not load the main space image or any local fallback image. Put space.jpg in the same folder as this index.html."
+            );
 
 
             return false;
@@ -4451,244 +5131,27 @@
         }
 
 
-        findLocalSpaceImage();
-
-
-        // =========================================================
-        // CREATE SPHERES
-        // =========================================================
-
-        function createSpaceSphere(
-            texture
-        ) {
-
-            if (
-                !texture
-            ) {
-
-                return;
-
-            }
-
-
-            // -------------------------------------------------------
-            // OLD INSIDE
-            // -------------------------------------------------------
-
-            if (
-                insideSphere
-            ) {
-
-                scene.remove(
-                    insideSphere
-                );
-
-
-                insideSphere.geometry.dispose();
-
-                insideSphere.material.dispose();
-
-
-                insideSphere =
-                    null;
-
-            }
-
-
-            // -------------------------------------------------------
-            // OLD OUTSIDE
-            // -------------------------------------------------------
-
-            if (
-                outsideSphere
-            ) {
-
-                scene.remove(
-                    outsideSphere
-                );
-
-
-                outsideSphere.geometry.dispose();
-
-                outsideSphere.material.dispose();
-
-
-                outsideSphere =
-                    null;
-
-            }
-
-
-            // -------------------------------------------------------
-            // TEXTURE
-            // -------------------------------------------------------
-
-            texture.colorSpace =
-                THREE.SRGBColorSpace;
-
-
-            texture.wrapS =
-                THREE.RepeatWrapping;
-
-
-            texture.wrapT =
-                THREE.ClampToEdgeWrapping;
-
-
-            texture.minFilter =
-                THREE.LinearFilter;
-
-
-            texture.magFilter =
-                THREE.LinearFilter;
-
-
-            texture.generateMipmaps =
-                false;
-
-
-            texture.needsUpdate =
-                true;
-
-
-            currentTexture =
-                texture;
-
-
-            // =======================================================
-            // INSIDE
-            // =======================================================
-
-            const insideGeometry =
-                new THREE.SphereGeometry(
-                    1,
-                    192,
-                    96
-                );
-
-
-            insideGeometry.scale(
-                -1,
-                1,
-                1
-            );
-
-
-            const insideMaterial =
-                new THREE.MeshBasicMaterial({
-
-                    map:
-                        texture,
-
-                    side:
-                        THREE.FrontSide,
-
-                    toneMapped:
-                        false
-
-                });
-
-
-            insideSphere =
-                new THREE.Mesh(
-                    insideGeometry,
-                    insideMaterial
-                );
-
-
-            insideSphere.name =
-                "Space_Inside_Sphere";
-
-
-            insideSphere.position.set(
-                0,
-                0,
-                0
-            );
-
-
-            insideSphere.scale.setScalar(
-                currentRadius
-            );
-
-
-            scene.add(
-                insideSphere
-            );
-
-
-            // =======================================================
-            // OUTSIDE — REAL 3D SPHERE
-            // =======================================================
-
-            const outsideGeometry =
-                new THREE.SphereGeometry(
-                    1,
-                    256,
-                    128
-                );
-
-
-            const outsideMaterial =
-                new THREE.MeshBasicMaterial({
-
-                    map:
-                        texture,
-
-                    side:
-                        THREE.FrontSide,
-
-                    toneMapped:
-                        false
-
-                });
-
-
-            outsideSphere =
-                new THREE.Mesh(
-                    outsideGeometry,
-                    outsideMaterial
-                );
-
-
-            outsideSphere.name =
-                "Space_3D_Outside_Sphere";
-
-
-            outsideSphere.position.set(
-                0,
-                0,
-                0
-            );
-
-
-            outsideSphere.rotation.set(
-                0,
-                0,
-                0
-            );
-
-
-            outsideSphere.scale.setScalar(
-                currentRadius
-            );
-
-
-            scene.add(
-                outsideSphere
-            );
-
-
-            applyImageRotation();
-
-
-            updateViewMode();
-
-        }
+        loadInitialSpaceImage();
 
 
         // =========================================================
         // GLB EXPORT
+        // =========================================================
+        //
+        // NOTE:
+        //
+        // The standard GLB exporter cannot preserve a live HTML5
+        // video stream/playlist.
+        //
+        // For video, current frame is exported.
+        //
+        // For an image, the textured sphere is exported.
+        //
+        // The X/Y image rotations are included.
+        //
+        // The Frame Stretch effect is a viewer shader effect,
+        // therefore a standard GLB export uses the original
+        // texture rather than the live shader effect.
         // =========================================================
 
         downloadBtn.addEventListener(
@@ -4725,6 +5188,10 @@
 
 
                 try {
+
+                    // ---------------------------------------------------
+                    // VIDEO CURRENT FRAME
+                    // ---------------------------------------------------
 
                     if (
                         mediaMode ===
@@ -4797,7 +5264,7 @@
 
 
                         showToast(
-                            "Standard GLB can't preserve live video animation. Saving the current frame.",
+                            "Standard GLB cannot preserve live video animation. Saving the current frame.",
                             5000
                         );
 
@@ -4810,6 +5277,10 @@
 
                     }
 
+
+                    // ---------------------------------------------------
+                    // EXPORT SPHERE
+                    // ---------------------------------------------------
 
                     const geometry =
                         new THREE.SphereGeometry(
@@ -4934,8 +5405,11 @@
 
 
                     link.download =
-                        mediaMode === "video"
+                        mediaMode ===
+                            "video"
+
                             ? "space-sphere-video-frame.glb"
+
                             : "space-sphere.glb";
 
 
@@ -4977,13 +5451,6 @@
                     }
 
 
-                    showToast(
-                        mediaMode === "video"
-                            ? "3D GLB saved with the current video frame."
-                            : "3D Space GLB saved."
-                    );
-
-
                     downloadBtn.textContent =
                         "GLB Downloaded ✓";
 
@@ -4996,6 +5463,15 @@
 
                         },
                         2200
+                    );
+
+
+                    showToast(
+                        mediaMode === "video"
+
+                            ? "3D GLB saved with the current video frame."
+
+                            : "3D Space GLB saved."
                     );
 
                 }
@@ -5060,12 +5536,24 @@
                     window.innerHeight
                 );
 
+
+                viewportAspect =
+                    window.innerWidth /
+                    window.innerHeight;
+
+
+                viewportHeight =
+                    window.innerHeight;
+
+
+                updateAllFrameStretchMaterials();
+
             }
         );
 
 
         // =========================================================
-        // ORIENTATION CHANGE
+        // ORIENTATION
         // =========================================================
 
         if (
@@ -5087,6 +5575,16 @@
 
 
         // =========================================================
+        // INITIAL
+        // =========================================================
+
+        updateFrameStretch();
+
+
+        updateViewMode();
+
+
+        // =========================================================
         // RENDER LOOP
         // =========================================================
 
@@ -5097,29 +5595,15 @@
             );
 
 
-            if (
-                sensorEnabled &&
-                sensorInitialized &&
-                insideView &&
-                !isDragging &&
-                !document.fullscreenElement
-            ) {
-
-                applySensorCamera();
-
-            }
-
-
             /*
-              Even in fullscreen the sensor must continue working.
+              Motion only drives inside mode.
             */
 
             if (
                 sensorEnabled &&
                 sensorInitialized &&
                 insideView &&
-                !isDragging &&
-                document.fullscreenElement
+                !isDragging
             ) {
 
                 applySensorCamera();
