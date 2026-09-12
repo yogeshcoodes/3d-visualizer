@@ -516,6 +516,181 @@
 
 
         /* =====================================================
+   SETTINGS
+   \===================================================== */
+
+        #settingsBtn {
+
+            position:
+                fixed;
+
+            top:
+                calc(12px + env(safe-area-inset-top));
+
+            right:
+                calc(60px + env(safe-area-inset-right));
+
+            z-index:
+                1000;
+
+            width:
+                40px;
+
+            height:
+                40px;
+
+            min-width:
+                40px;
+
+            min-height:
+                40px;
+
+            padding:
+                0;
+
+            border:
+                0;
+
+            border-radius:
+                10px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            background:
+                rgba(255, 255, 255, .5);
+
+            color:
+                #111;
+
+            font-size:
+                19px;
+
+            line-height:
+                1;
+
+            opacity:
+                .5;
+
+            cursor:
+                pointer;
+
+            pointer-events:
+                auto;
+
+            backdrop-filter:
+                blur(8px);
+
+            -webkit-backdrop-filter:
+                blur(8px);
+        }
+
+
+
+        #settingsPanel {
+
+            position:
+                fixed;
+
+            top:
+                calc(60px + env(safe-area-inset-top));
+
+            right:
+                calc(12px + env(safe-area-inset-right));
+
+            z-index:
+                999;
+
+            width:
+                min(240px, calc(100vw - 24px));
+
+            padding:
+                12px;
+
+            border-radius:
+                12px;
+
+            display:
+                none;
+
+            color:
+                rgba(255, 255, 255, .92);
+
+            background:
+                rgba(0, 0, 0, .72);
+
+            backdrop-filter:
+                blur(10px);
+
+            -webkit-backdrop-filter:
+                blur(10px);
+
+            box-shadow:
+                0 8px 24px rgba(0, 0, 0, .35);
+        }
+
+
+
+        #settingsPanel.open {
+            display:
+                block;
+        }
+
+
+
+        .settings-label {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            margin-bottom:
+                8px;
+
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+        }
+
+
+
+        #gyroSensitivitySlider {
+            width:
+                100%;
+
+            accent-color:
+                white;
+        }
+
+
+
+        #gyroSensitivityValue {
+            color:
+                rgba(255, 255, 255, .66);
+
+            font-size:
+                10px;
+
+            font-weight:
+                400;
+        }
+
+
+
+        /* =====================================================
    BOTTOM UI
    \===================================================== */
 
@@ -1099,6 +1274,22 @@
 
 
 
+        <button id="settingsBtn" type="button" aria-label="Settings" title="Settings">
+            ⚙
+        </button>
+
+
+
+        <div id="settingsPanel">
+            <div class="settings-label">
+                <span>Gyro Sensitivity</span>
+                <span id="gyroSensitivityValue">50%</span>
+            </div>
+            <input id="gyroSensitivitySlider" type="range" min="0" max="100" value="50" step="1">
+        </div>
+
+
+
         <!-- ===================================================
    BOTTOM UI
    \=================================================== -->
@@ -1424,6 +1615,34 @@
         const fullscreenCornerBtn =
             document.getElementById(
                 "fullscreenCornerBtn"
+            );
+
+
+
+        const settingsBtn =
+            document.getElementById(
+                "settingsBtn"
+            );
+
+
+
+        const settingsPanel =
+            document.getElementById(
+                "settingsPanel"
+            );
+
+
+
+        const gyroSensitivitySlider =
+            document.getElementById(
+                "gyroSensitivitySlider"
+            );
+
+
+
+        const gyroSensitivityValue =
+            document.getElementById(
+                "gyroSensitivityValue"
             );
 
 
@@ -1795,6 +2014,11 @@
 
         let sensorInitialized =
             false;
+
+
+
+        let gyroSensitivity =
+            50;
 
 
 
@@ -3129,7 +3353,8 @@
 
                 smoothedSensorQuaternion.slerp(
                     target,
-                    0.16
+                    0.16 *
+                    (gyroSensitivity / 50)
                 );
 
             }
@@ -3302,6 +3527,66 @@
                     );
 
                 }
+
+            }
+        );
+
+
+
+        settingsBtn.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                settingsPanel.classList.toggle(
+                    "open"
+                );
+
+                wakeUI();
+
+            }
+        );
+
+
+
+        settingsPanel.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+            }
+        );
+
+
+
+        document.addEventListener(
+            "click",
+            () => {
+
+                settingsPanel.classList.remove(
+                    "open"
+                );
+
+            }
+        );
+
+
+
+        gyroSensitivitySlider.addEventListener(
+            "input",
+            () => {
+
+                gyroSensitivity =
+                    Number(
+                        gyroSensitivitySlider.value
+                    );
+
+                gyroSensitivityValue.textContent =
+                    `${gyroSensitivity}%`;
+
+                wakeUI();
 
             }
         );
