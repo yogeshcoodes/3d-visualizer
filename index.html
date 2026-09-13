@@ -118,6 +118,71 @@
 
 
 
+        #imageNav button {
+
+            position: fixed;
+
+            top: 50%;
+
+            z-index: 90;
+
+            width: 42px;
+
+            min-width: 42px;
+
+            height: 42px;
+
+            min-height: 42px;
+
+            padding: 0;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: rgba(255, 255, 255, .72);
+
+            color: #111;
+
+            font-size: 24px;
+
+            line-height: 1;
+
+            transform: translateY(-50%);
+
+            pointer-events: auto;
+        }
+
+
+
+        #imageNav button:hover {
+            transform: translateY(-50%) scale(1.04);
+        }
+
+
+
+        #imageNav button:active {
+            transform: translateY(-50%) scale(.96);
+        }
+
+
+
+        #previousImageBtn {
+            left: max(12px, env(safe-area-inset-left));
+        }
+
+
+
+        #nextImageBtn {
+            right: max(12px, env(safe-area-inset-right));
+        }
+
+
+
         /* =====================================================
    STATUS
    \===================================================== */
@@ -1282,6 +1347,25 @@
 
 
 
+        <div id="imageNav" aria-label="Image navigation">
+            <button id="previousImageBtn" type="button" aria-label="Previous image" title="Previous image">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-chevron-left">
+                    <path d="m15 18-6-6 6-6" />
+                </svg>
+            </button>
+            <button id="nextImageBtn" type="button" aria-label="Next image" title="Next image">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-chevron-right">
+                    <path d="m9 18 6-6-6-6" />
+                </svg>
+            </button>
+        </div>
+
+
+
         <!-- ===================================================
    STATUS
    \=================================================== -->
@@ -1605,6 +1689,20 @@
         const viewer =
             document.getElementById(
                 "viewer"
+            );
+
+
+
+        const previousImageBtn =
+            document.getElementById(
+                "previousImageBtn"
+            );
+
+
+
+        const nextImageBtn =
+            document.getElementById(
+                "nextImageBtn"
             );
 
 
@@ -2496,6 +2594,56 @@
             );
 
         }
+
+
+
+        viewer.addEventListener(
+            "wheel",
+            event => {
+
+                if (
+                    !insideView ||
+                    !event.deltaY
+                ) {
+
+                    return;
+
+                }
+
+
+
+                event.preventDefault();
+
+                wakeUI();
+
+
+
+                const currentDistance =
+                    Number(
+                        distanceSlider.value
+                    );
+
+
+
+                distanceSlider.value =
+                    Math.max(
+                        Number(distanceSlider.min),
+                        Math.min(
+                            Number(distanceSlider.max),
+                            currentDistance - Math.sign(event.deltaY)
+                        )
+                    );
+
+
+
+                updateInsideDistance();
+
+            },
+            {
+                passive:
+                    false
+            }
+        );
 
 
 
@@ -5938,6 +6086,24 @@
 
 
 
+        const galleryImages = [
+
+            "space.jpg",
+            "Forest.jpg",
+            "Day.jpg",
+            "Hall.jpg",
+            "Snow.jpg",
+            "Space-2.jpg"
+
+        ];
+
+
+
+        let currentGalleryIndex =
+            0;
+
+
+
         function loadTextureFromURL(
             url
         ) {
@@ -6083,6 +6249,112 @@
             return false;
 
         }
+
+
+
+        async function loadGalleryImage(
+            index
+        ) {
+
+            const galleryIndex =
+                (index + galleryImages.length) % galleryImages.length;
+
+
+
+            showLoading(
+                "Loading image..."
+            );
+
+
+
+            try {
+
+                const texture =
+                    await loadTextureFromURL(
+                        galleryImages[galleryIndex]
+                    );
+
+
+
+                stopAllVideo();
+
+
+
+                mediaMode =
+                    "image";
+
+
+
+                createSpaceSphere(
+                    texture
+                );
+
+
+
+                currentGalleryIndex =
+                    galleryIndex;
+
+
+
+                hideLoading();
+
+                errorBox.style.display =
+                    "none";
+
+
+
+                showToast(
+                    `Loaded ${galleryImages[galleryIndex]}.`
+                );
+
+            }
+
+            catch (error) {
+
+                hideLoading();
+
+                showToast(
+                    "Couldn't load that image."
+                );
+
+                console.warn(
+                    `Gallery image failed: ${galleryImages[galleryIndex]}`,
+                    error
+                );
+
+            }
+
+        }
+
+
+
+        previousImageBtn.addEventListener(
+            "click",
+            () => {
+
+                wakeUI();
+
+                loadGalleryImage(
+                    currentGalleryIndex - 1
+                );
+
+            }
+        );
+
+
+
+        nextImageBtn.addEventListener(
+            "click",
+            () => {
+
+                wakeUI();
+
+                loadGalleryImage(
+                    currentGalleryIndex + 1
+                );
+
+            }
+        );
 
 
 
