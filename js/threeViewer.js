@@ -40,9 +40,13 @@ export class ThreeViewer {
 
         this.isDragging = false;
         this.isPinching = false;
+        this.isTwoFingerDragging = false;
+
         this.activePointers = new Map();
         this.lastPointerX = 0;
         this.lastPointerY = 0;
+        this.lastTwoFingerX = 0;
+        this.lastTwoFingerY = 0;
         this.pinchStartDistance = 0;
         this.pinchStartZoom = 1;
 
@@ -54,6 +58,8 @@ export class ThreeViewer {
         this.smoothedSensorQuaternion = new THREE.Quaternion();
         this.hasSmoothedSensor = false;
         this.screenAngle = 0;
+
+        this.onImageRotationChange = null;
 
         this.bindEvents();
         this.animate();
@@ -78,7 +84,6 @@ export class ThreeViewer {
         this.sensorEnabled = false;
         this.sensorInitialized = false;
         this.hasSmoothedSensor = false;
-        this.applyInsideCamera();
     }
 
     createSpaceSphere(texture) {
@@ -146,10 +151,10 @@ export class ThreeViewer {
     }
 
     applyImageRotation(x, y) {
-        this.imageRotationX = x;
-        this.imageRotationY = y;
-        const rx = THREE.MathUtils.degToRad(x);
-        const ry = THREE.MathUtils.degToRad(y);
+        this.imageRotationX = Number(x);
+        this.imageRotationY = Number(y);
+        const rx = THREE.MathUtils.degToRad(this.imageRotationX);
+        const ry = THREE.MathUtils.degToRad(this.imageRotationY);
         if (this.insideSphere) {
             this.insideSphere.rotation.x = rx;
             this.insideSphere.rotation.y = ry + Math.PI;
@@ -167,27 +172,37 @@ export class ThreeViewer {
         if (this.insideView) {
             this.insideSphere.visible = true;
             this.outsideSphere.visible = false;
-            if (this.sensorEnabled && this.sensorInitialized) {
-                this.applySensorCamera();
-            } else {
-                this.applyInsideCamera();
-            }
         } else {
             this.insideSphere.visible = false;
             this.outsideSphere.visible = true;
             this.camera.fov = 55;
             this.camera.updateProjectionMatrix();
-            this.applyOutsideCamera();
         }
         this.applyImageRotation(this.imageRotationX, this.imageRotationY);
         this.updateAllFrameStretchMaterials();
     }
 
+    // FIX: Fused touch panning and gyroscope motion into a single unified camera system
     applyInsideCamera() {
         this.camera.position.set(0, 0, 0.01);
-        this.camera.rotation.order = "YXZ";
-        this.camera.rotation.y = this.yaw;
-        this.camera.rotation.x = this.pitch;
+
+        // Base Touch Rotation
+        const baseEuler = new THREE.Euler(this.pitch, this.yaw, 0, "YXZ");
+        const baseQ = new THREE.Quaternion().setFromEuler(baseEuler);
+
+        // Multiply Sensor Rotation (Acts like rotating a swivel chair AND looking around simultaneously)
+        if (this.sensorEnabled && this.sensorInitialized) {
+            const target = this.sensorReference.clone().multiply(this.sensorQuaternion);
+            if (!this.hasSmoothedSensor) {
+                this.smoothedSensorQuaternion.copy(target);
+                this.hasSmoothedSensor = true;
+            } else {
+                this.smoothedSensorQuaternion.slerp(target, 0.16 * (this.gyroSensitivity / 50));
+            }
+            this.camera.quaternion.copy(baseQ).multiply(this.smoothedSensorQuaternion);
+        } else {
+            this.camera.quaternion.copy(baseQ);
+        }
     }
 
     applyOutsideCamera() {
@@ -199,19 +214,6 @@ export class ThreeViewer {
         const cy = Math.cos(this.orbitYaw);
         this.camera.position.set(distance * cp * sy, distance * sp, distance * cp * cy);
         this.camera.lookAt(0, 0, 0);
-    }
-
-    applySensorCamera() {
-        if (!this.sensorEnabled || !this.sensorInitialized || !this.insideView || this.isDragging) return;
-        this.camera.position.set(0, 0, 0.01);
-        const target = this.sensorReference.clone().multiply(this.sensorQuaternion);
-        if (!this.hasSmoothedSensor) {
-            this.smoothedSensorQuaternion.copy(target);
-            this.hasSmoothedSensor = true;
-        } else {
-            this.smoothedSensorQuaternion.slerp(target, 0.16 * (this.gyroSensitivity / 50));
-        }
-        this.camera.quaternion.copy(this.smoothedSensorQuaternion);
     }
 
     setupFrameStretchShader(material) {
@@ -288,6 +290,7 @@ export class ThreeViewer {
     stopDragging() {
         this.isDragging = false;
         this.isPinching = false;
+        this.isTwoFingerDragging = false;
         this.container.classList.remove("dragging");
         if (document.pointerLockElement === this.container) {
             try { document.exitPointerLock(); } catch (_) { }
@@ -312,13 +315,23 @@ export class ThreeViewer {
             if (e.pointerType === "touch") {
                 try { this.container.setPointerCapture(e.pointerId); } catch (_) { }
                 const touches = Array.from(this.activePointers.values()).filter(p => p.type === "touch");
-                if (touches.length >= 2 && !this.insideView) {
-                    this.isPinching = true;
-                    this.isDragging = false;
-                    this.pinchStartDistance = this.getPinchDistance();
-                    this.pinchStartZoom = this.outsideZoom;
+
+                if (touches.length === 2) {
+                    if (!this.insideView) {
+                        this.isPinching = true;
+                        this.isDragging = false;
+                        this.pinchStartDistance = this.getPinchDistance();
+                        this.pinchStartZoom = this.outsideZoom;
+                    } else {
+                        // FIX: Two-finger Image Rotation drag (inside view)
+                        this.isTwoFingerDragging = true;
+                        this.isDragging = false;
+                        this.lastTwoFingerX = (touches[0].x + touches[1].x) / 2;
+                        this.lastTwoFingerY = (touches[0].y + touches[1].y) / 2;
+                    }
                     return;
                 }
+
                 if (touches.length === 1) {
                     this.isDragging = true;
                     this.lastPointerX = e.clientX;
@@ -341,14 +354,39 @@ export class ThreeViewer {
                 this.activePointers.set(e.pointerId, { type: e.pointerType, x: e.clientX, y: e.clientY });
             }
 
-            if (e.pointerType === "touch" && this.isPinching && !this.insideView) {
-                const distance = this.getPinchDistance();
-                if (this.pinchStartDistance > 0) {
-                    const ratio = distance / this.pinchStartDistance;
-                    this.outsideZoom = THREE.MathUtils.clamp(this.pinchStartZoom / ratio, 0.45, 2.8);
-                    this.applyOutsideCamera();
+            if (e.pointerType === "touch") {
+                const touches = Array.from(this.activePointers.values()).filter(p => p.type === "touch");
+                if (touches.length === 2) {
+                    if (!this.insideView && this.isPinching) {
+                        const distance = this.getPinchDistance();
+                        if (this.pinchStartDistance > 0) {
+                            const ratio = distance / this.pinchStartDistance;
+                            this.outsideZoom = THREE.MathUtils.clamp(this.pinchStartZoom / ratio, 0.45, 2.8);
+                        }
+                    } else if (this.insideView && this.isTwoFingerDragging) {
+                        // Calculate 2-finger pan delta
+                        const cx = (touches[0].x + touches[1].x) / 2;
+                        const cy = (touches[0].y + touches[1].y) / 2;
+                        const dx = cx - this.lastTwoFingerX;
+                        const dy = cy - this.lastTwoFingerY;
+
+                        this.imageRotationX += dy * 0.35;
+                        this.imageRotationY += dx * 0.35;
+
+                        this.imageRotationX = Math.max(-180, Math.min(180, this.imageRotationX));
+
+                        this.imageRotationY = this.imageRotationY % 360;
+                        if (this.imageRotationY > 180) this.imageRotationY -= 360;
+                        if (this.imageRotationY < -180) this.imageRotationY += 360;
+
+                        this.applyImageRotation(this.imageRotationX, this.imageRotationY);
+                        if (this.onImageRotationChange) this.onImageRotationChange(this.imageRotationX, this.imageRotationY);
+
+                        this.lastTwoFingerX = cx;
+                        this.lastTwoFingerY = cy;
+                    }
+                    return;
                 }
-                return;
             }
 
             if (!this.isDragging) return;
@@ -365,19 +403,15 @@ export class ThreeViewer {
                 this.yaw -= dx * sens;
                 this.pitch -= dy * sens;
 
-                // FIX: Clamp pitch to prevent the camera from rotating past the vertical poles
-                // This stops the world from flipping upside down when looking up.
+                // FIX: Pitch clamping prevents gimbal lock (world flipping upside down)
                 const maxPitch = Math.PI / 2 - 0.01;
                 this.pitch = Math.max(-maxPitch, Math.min(maxPitch, this.pitch));
-
                 this.yaw %= Math.PI * 2;
-                this.applyInsideCamera();
             } else {
                 this.orbitYaw -= dx * sens;
                 this.orbitPitch += dy * sens;
                 const limit = Math.PI / 2 - 0.02;
                 this.orbitPitch = Math.max(-limit, Math.min(limit, this.orbitPitch));
-                this.applyOutsideCamera();
             }
         });
 
@@ -386,7 +420,10 @@ export class ThreeViewer {
             this.activePointers.delete(e.pointerId);
             if (e.pointerType === "touch") {
                 const touches = Array.from(this.activePointers.values()).filter(p => p.type === "touch");
-                if (touches.length < 2) this.isPinching = false;
+                if (touches.length < 2) {
+                    this.isPinching = false;
+                    this.isTwoFingerDragging = false;
+                }
                 if (touches.length === 0) this.isDragging = false;
                 return;
             }
@@ -397,6 +434,7 @@ export class ThreeViewer {
             this.activePointers.delete(e.pointerId);
             this.isPinching = false;
             this.isDragging = false;
+            this.isTwoFingerDragging = false;
         });
         window.addEventListener("mouseup", e => { if (e.button === 0) this.stopDragging(); });
         window.addEventListener("blur", () => { this.stopDragging(); this.activePointers.clear(); });
@@ -437,8 +475,10 @@ export class ThreeViewer {
     animate() {
         requestAnimationFrame(() => this.animate());
 
-        if (this.sensorEnabled && this.sensorInitialized && this.insideView && !this.isDragging) {
-            this.applySensorCamera();
+        if (this.insideView) {
+            this.applyInsideCamera();
+        } else {
+            this.applyOutsideCamera();
         }
 
         // VR Stereoscopic Split Screen Render

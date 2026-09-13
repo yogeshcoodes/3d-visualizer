@@ -213,6 +213,49 @@
             transform: translate(-50%, 0);
         }
 
+        /* VR PROMPT */
+        #vrLandscapePrompt {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            color: white;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 16px 28px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        #vrLandscapePrompt.show {
+            visibility: visible;
+            opacity: 1;
+            animation: vrPulse 2s infinite ease-in-out;
+        }
+
+        @keyframes vrPulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.08);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
         /* CORNER BUTTONS */
         #fullscreenCornerBtn {
             position: fixed;
@@ -661,6 +704,7 @@
 
         <div id="viewStatus">INSIDE VIEW</div>
         <div id="sensorStatus">MOTION SENSOR ACTIVE</div>
+        <div id="vrLandscapePrompt">Tilt your device (landscape) to experience</div>
         <div id="loading">Loading...</div>
         <div id="error"></div>
         <div id="toast"></div>
@@ -695,7 +739,7 @@
 
         <!-- BOTTOM UI -->
         <div class="ui" id="ui">
-            <div class="title">Hold Left Mouse Button + Move • Touch & Drag • Scroll to Zoom</div>
+            <div class="title">Touch/Drag • 2-Finger Rotate • Scroll to Zoom</div>
             <div id="controlsPanel">
                 <div id="distanceOnly" class="slider-row">
                     <div class="slider-label">Space Distance</div>

@@ -1,4 +1,4 @@
-const CACHE_NAME = "space-sphere-v16";
+const CACHE_NAME = "space-sphere-v17";
 
 const APP_SHELL = [
     "./",

@@ -66,6 +66,14 @@ const hideLoading = () => {
 document.addEventListener("pointerdown", () => audio.resume(), { passive: true });
 document.addEventListener("keydown", () => audio.resume(), { passive: true });
 
+// Bind 2-finger swipe changes from viewer back to UI sliders
+viewer.onImageRotationChange = (rx, ry) => {
+    document.getElementById("rotationXSlider").value = Math.round(rx);
+    document.getElementById("rotationXValue").textContent = `${Math.round(rx)}°`;
+    document.getElementById("rotationYSlider").value = Math.round(ry);
+    document.getElementById("rotationYValue").textContent = `${Math.round(ry)}°`;
+};
+
 // Mouse Wheel for Space Distance
 document.getElementById("viewer").addEventListener("wheel", e => {
     if (!insideView || !e.deltaY) return;
@@ -138,10 +146,16 @@ document.getElementById("vrToggle").addEventListener("click", e => {
     e.target.textContent = `VR Split Screen: ${isVR ? "ON" : "OFF"}`;
 
     if (isVR) {
-        showToast("VR Mode ON. Insert phone into headset.");
+        const prompt = document.getElementById("vrLandscapePrompt");
+        prompt.classList.add("show");
+        setTimeout(() => prompt.classList.remove("show"), 4000);
+
         if (!document.fullscreenElement) {
             toggleFullscreen();
         }
+        try { screen.orientation.lock("landscape").catch(() => { }); } catch (err) { }
+    } else {
+        try { screen.orientation.unlock(); } catch (err) { }
     }
     wakeUI();
 });
