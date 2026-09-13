@@ -155,6 +155,12 @@
             transform: translateY(-50%);
 
             pointer-events: auto;
+
+            opacity: 1;
+
+            transition:
+                opacity .15s ease,
+                transform .14s ease;
         }
 
 
@@ -1131,6 +1137,8 @@
 
         #app.fullscreen-active.fullscreen-idle #settingsBtn,
 
+        #app.fullscreen-active.fullscreen-idle #imageNav button,
+
         #app.fullscreen-active.fullscreen-idle #sensorStatus {
 
             opacity:
@@ -1492,7 +1500,7 @@
 
 
 
-                    <input id="frameStretchSlider" class="slider" type="range" min="-60" max="100.1" value="100"
+                    <input id="frameStretchSlider" class="slider" type="range" min="-60" max="100.1" value="100.1"
                         step="0.1">
 
 
@@ -3975,7 +3983,7 @@
 
 
             frameStretchValue.textContent =
-                `${frameStretch}%`;
+                `${Math.max(0, Math.min(100, frameStretch))}%`;
 
 
 
