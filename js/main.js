@@ -350,8 +350,7 @@ const galleryImages = [
     "assets/Forest.jpg",
     "assets/Day.jpg",
     "assets/Hall.jpg",
-    "assets/Snow.jpg",
-    "assets/Space-2.jpg"
+    "assets/Snow.jpg"
 ];
 let currentGalleryIndex = 0;
 
