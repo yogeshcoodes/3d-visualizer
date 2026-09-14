@@ -298,15 +298,22 @@ export class ThreeViewer {
     }
 
     bindEvents() {
-        window.addEventListener("resize", () => {
-            this.camera.aspect = window.innerWidth / window.innerHeight;
+        const resizeViewer = () => {
+            const width = this.container.clientWidth || window.innerWidth;
+            const height = this.container.clientHeight || window.innerHeight;
+            this.camera.aspect = width / height;
             this.camera.updateProjectionMatrix();
             this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.renderer.setSize(width, height, false);
             this.updateAllFrameStretchMaterials();
-        });
+        };
 
-        this.container.addEventListener("pointerdown", async e => {
+        window.addEventListener("resize", () => {
+            resizeViewer();
+        });
+        resizeViewer();
+
+        this.container.addEventListener("pointerdown", e => {
             if (this.wakeCb) this.wakeCb();
             if (e.pointerType === "mouse" && e.button !== 0) return;
             e.preventDefault();
@@ -343,9 +350,7 @@ export class ThreeViewer {
             this.isDragging = true;
             this.lastPointerX = e.clientX;
             this.lastPointerY = e.clientY;
-            try {
-                if (document.pointerLockElement !== this.container) await this.container.requestPointerLock();
-            } catch (_) { }
+            try { this.container.setPointerCapture(e.pointerId); } catch (_) { }
         });
 
         this.container.addEventListener("pointermove", e => {
@@ -390,13 +395,10 @@ export class ThreeViewer {
             }
 
             if (!this.isDragging) return;
-            let dx = 0, dy = 0;
-            if (document.pointerLockElement === this.container) {
-                dx = e.movementX; dy = e.movementY;
-            } else {
-                dx = e.clientX - this.lastPointerX; dy = e.clientY - this.lastPointerY;
-                this.lastPointerX = e.clientX; this.lastPointerY = e.clientY;
-            }
+            const dx = e.clientX - this.lastPointerX;
+            const dy = e.clientY - this.lastPointerY;
+            this.lastPointerX = e.clientX;
+            this.lastPointerY = e.clientY;
 
             const sens = 0.0025;
             if (this.insideView) {
@@ -424,7 +426,13 @@ export class ThreeViewer {
                     this.isPinching = false;
                     this.isTwoFingerDragging = false;
                 }
-                if (touches.length === 0) this.isDragging = false;
+                if (touches.length === 1) {
+                    this.isDragging = true;
+                    this.lastPointerX = touches[0].x;
+                    this.lastPointerY = touches[0].y;
+                } else if (touches.length === 0) {
+                    this.isDragging = false;
+                }
                 return;
             }
             this.stopDragging();
@@ -485,6 +493,7 @@ export class ThreeViewer {
         if (this.vrEnabled && this.insideView) {
             this.renderer.setScissorTest(true);
 
+            this.camera.updateMatrixWorld();
             this.stereoCamera.update(this.camera);
             const size = new THREE.Vector2();
             this.renderer.getSize(size);
@@ -502,7 +511,9 @@ export class ThreeViewer {
             this.renderer.setScissorTest(false);
         } else {
             // Standard Single Viewport Render
-            this.renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
+            const size = new THREE.Vector2();
+            this.renderer.getSize(size);
+            this.renderer.setViewport(0, 0, size.width, size.height);
             this.renderer.render(this.scene, this.camera);
         }
     }
